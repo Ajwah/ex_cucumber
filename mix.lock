@@ -1,0 +1,14 @@
+%{
+  "benchee": {:hex, :benchee, "1.0.1", "66b211f9bfd84bd97e6d1beaddf8fc2312aaabe192f776e8931cb0c16f53a521", [:mix], [{:deep_merge, "~> 1.0", [hex: :deep_merge, repo: "hexpm", optional: false]}], "hexpm", "3ad58ae787e9c7c94dd7ceda3b587ec2c64604563e049b2a0e8baafae832addb"},
+  "crypto_rand": {:hex, :crypto_rand, "1.0.2", "e1381d3fbe743cfb6082150f4f95dc7ac3fcaf5b53dae0fc96f7e0f006d91dd1", [:mix], [], "hexpm", "ca0eebc811c4496446c4d32e18e3888d7cf8fb1f441af015578f3523b1e35be8"},
+  "deep_merge": {:hex, :deep_merge, "1.0.0", "b4aa1a0d1acac393bdf38b2291af38cb1d4a52806cf7a4906f718e1feb5ee961", [:mix], [], "hexpm", "ce708e5f094b9cd4e8f2be4f00d2f4250c4095be93f8cd6d018c753894885430"},
+  "entropy_string": {:hex, :entropy_string, "1.3.4", "57eb6bb59adf1ec7eaeba9f013f3a70680dfbd835d027b7ff27d3b039559c254", [:mix], [], "hexpm", "f5d0d0e692a247d50add0b2bdb1281e6d7a02a14e192b8764b593642f55fab59"},
+  "gettext": {:hex, :gettext, "0.17.4", "f13088e1ec10ce01665cf25f5ff779e7df3f2dc71b37084976cf89d1aa124d5c", [:mix], [], "hexpm", "3c75b5ea8288e2ee7ea503ff9e30dfe4d07ad3c054576a6e60040e79a801e14d"},
+  "misc_random": {:hex, :misc_random, "0.2.9", "04368bc37c58913c4e57c33ec9700528f9f83835021d0fac376f00af1b4c188c", [:mix], [], "hexpm", "d618fcb630761a33d99efbbdcb0a46b898c9fbf5de022528ae77dcaac0863207"},
+  "not_qwerty123": {:hex, :not_qwerty123, "2.3.1", "8571d20c788c05498f4d8e2e89e53771f1b4e9fa08f77ae85f5705d895853110", [:mix], [{:gettext, "~> 0.16", [hex: :gettext, repo: "hexpm", optional: false]}], "hexpm", "046ff42630e7dce09eb6ede708cc2a37a8dc3194d8efa0331d34a3de3d234d3e"},
+  "puid": {:hex, :puid, "1.1.1", "e1155e141fe21141dba74a840b0a6b01336f972f08e9ce8fa489ffcd48ba9fa6", [:mix], [{:crypto_rand, "~> 1.0", [hex: :crypto_rand, repo: "hexpm", optional: false]}], "hexpm", "fc271ee494abf54b9cb896b30648c49f2f6e8112cf4990b7e3a92ca871be3338"},
+  "rand_str": {:hex, :rand_str, "1.0.1", "da59b890990be47be41fdca0ffb09da8b88444d96258b85ffa789d37fd26a67a", [:rebar3], [], "hexpm", "7f82b555ece3cfcf09a4aa5302e7d272802405c18f0a2c2eed79b36b189a8157"},
+  "randomizer": {:hex, :randomizer, "1.1.0", "2a26f05b5f67acc6b82c87913c201d3e0f9cd2e64eeb350f8809f1c5e8b5ad13", [:mix], [], "hexpm", "08f841c22bb3a25b6c40f9dcc3c84d23263b564a88f5d3f84623178724c01175"},
+  "secure_random": {:hex, :secure_random, "0.5.1", "c5532b37c89d175c328f5196a0c2a5680b15ebce3e654da37129a9fe40ebf51b", [:mix], [], "hexpm", "1b9754f15e3940a143baafd19da12293f100044df69ea12db5d72878312ae6ab"},
+  "uuid": {:hex, :uuid, "1.1.8", "e22fc04499de0de3ed1116b770c7737779f226ceefa0badb3592e64d5cfb4eb9", [:mix], [], "hexpm", "c790593b4c3b601f5dc2378baae7efaf5b3d73c4c6456ba85759905be792f2ac"},
+}
