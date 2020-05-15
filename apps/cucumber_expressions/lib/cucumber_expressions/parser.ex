@@ -1,6 +1,7 @@
 defmodule CucumberExpressions.Parser do
   @moduledoc """
   """
+
   import Record
   alias Utils
 
@@ -14,6 +15,8 @@ defmodule CucumberExpressions.Parser do
     only_spaces_so_far?: false,
     multiple_ids_allowed?: true,
     id: ""
+
+  defstruct [:result]
 
   @type t() ::
           record(:parser,
@@ -30,6 +33,8 @@ defmodule CucumberExpressions.Parser do
 
   alias __MODULE__.SyntaxError
   alias __MODULE__.ValidationError
+
+  use ExDebugger.Manual
 
   def new(
         remaining_sentence,
@@ -66,12 +71,16 @@ defmodule CucumberExpressions.Parser do
     else
       {type_constraint, violator, false} ->
         ValidationError.raise(
-          "[#{__MODULE__}.new] Expected type: #{type_constraint}. Violator: #{violator}",
+          "[#{__MODULE__}.new] Expected type: #{inspect(type_constraint)}. Violator: #{
+            inspect(violator)
+          }",
           :type_mismatch,
           violator
         )
     end
   end
+
+  def result(r) when is_map(r), do: struct(__MODULE__, %{result: r})
 
   def run(sentence, collected_sentences, id \\ Utils.id(:fixed)) do
     {remaining_sentence, preceding_spaces} = handle_preceding_spaces(sentence, 0)
@@ -216,7 +225,7 @@ defmodule CucumberExpressions.Parser do
         |> process(rest)
 
       <<"{", rest::binary>> ->
-        params = Map.get(collected_sentences, :params, %{next_key: %{}})
+        params = Map.get(collected_sentences, :params, %{next_key: %{p2p: %{}}})
 
         p =
           parser(p,
@@ -441,14 +450,20 @@ defmodule CucumberExpressions.Parser do
     handle_optional_text(rest, optional_text_so_far <> <<char::utf8>>, flags)
   end
 
-  # defp handle
-
   defp handle_parameter(
          #  parser(remaining_sentence: <<"any}", _::binary>>, original_sentence: original_sentence)
          parser(original_sentence: original_sentence),
          <<"any}", _::binary>>
        ) do
     SyntaxError.raise("Reserved Param: :any", :reserved_param, original_sentence)
+  end
+
+  defp handle_parameter(
+         #  parser(remaining_sentence: <<"any}", _::binary>>, original_sentence: original_sentence)
+         parser(original_sentence: original_sentence),
+         <<"p2p}", _::binary>>
+       ) do
+    SyntaxError.raise("Reserved Param: :p2p", :reserved_param, original_sentence)
   end
 
   defp handle_parameter(
@@ -463,16 +478,12 @@ defmodule CucumberExpressions.Parser do
         result = process(parser(p, current_word: param), rest)
 
         next_words =
-          result[param]
-          |> Map.keys()
-          |> case do
-            [:params | _] ->
-              Map.keys(result[param][:params])
-
-            rs = [r | _] ->
-              [r, :next_key]
-              rs
+          if result[param][:params] do
+            result[param].params
+          else
+            result[param]
           end
+          |> Map.keys()
           |> Enum.filter(fn e -> e != :params and e != :next_key and e != :id end)
 
         params =
@@ -483,6 +494,7 @@ defmodule CucumberExpressions.Parser do
             |> case do
               nil ->
                 Enum.reduce(next_words, %{}, fn e, a -> Map.put(a, e, param) end)
+                |> dd(:parser)
 
               mapping ->
                 # mapping[next_word]
@@ -496,7 +508,12 @@ defmodule CucumberExpressions.Parser do
                   a[e]
                   |> case do
                     nil ->
-                      Map.put(a, e, param)
+                      if is_atom(e) do
+                        Map.put(a, :p2p, Map.put(a.p2p, e, param))
+                      else
+                        Map.put(a, e, param)
+                      end
+                      |> dd(:parser)
 
                     ls when is_list(ls) ->
                       if param in ls do
@@ -504,6 +521,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param | ls])
                       end
+                      |> dd(:parser)
 
                     el ->
                       if param == el do
@@ -511,6 +529,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param, el])
                       end
+                      |> dd(:parser)
                   end
                 end)
             end
