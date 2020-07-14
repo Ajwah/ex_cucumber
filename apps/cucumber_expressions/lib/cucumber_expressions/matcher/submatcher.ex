@@ -51,7 +51,8 @@ defmodule CucumberExpressions.Matcher.Submatcher do
     |> ParseTree.next_key_match(current_word)
     |> case do
       :key_not_present ->
-        {:key_not_present, s, rest} |> dd(:submatcher)
+        {:key_not_present, s, rest}
+        # |> dd(:submatcher)
 
         s
         |> submatcher(
@@ -95,7 +96,8 @@ defmodule CucumberExpressions.Matcher.Submatcher do
     |> ParseTree.next_key_match(current_word)
     |> case do
       :key_not_present ->
-        {:key_not_present, s} |> dd(:submatcher)
+        {:key_not_present, s}
+        # |> dd(:submatcher)
         :key_not_present
 
       {:potential_param_to_value_match, matching_key, previous_key} ->

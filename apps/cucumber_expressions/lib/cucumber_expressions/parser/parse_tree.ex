@@ -40,7 +40,7 @@ defmodule CucumberExpressions.Parser.ParseTree do
             subtree
         end
     end
-    |> dd(:parse_tree)
+    # |> dd(:parse_tree)
   end
 
   def next_key_match(parse_tree, potential_key) do

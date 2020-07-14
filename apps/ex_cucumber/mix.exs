@@ -26,9 +26,10 @@ defmodule ExCucumber.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      # {:sibling_app_in_umbrella, in_umbrella: true}
+      {:cucumber_expressions, in_umbrella: true},
+      {:utils, in_umbrella: true},
+      {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger"},
+      {:ex_gherkin, path: "/Users/kevinjohnson/projects/ex_gherkin"},
     ]
   end
 end

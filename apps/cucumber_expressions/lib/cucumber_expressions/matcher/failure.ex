@@ -3,7 +3,10 @@ defmodule CucumberExpressions.Matcher.Failure do
   import Kernel, except: [raise: 2]
   import CucumberExpressions.Matcher.Data
 
+  # alias __MODULE__.Messages
+
   defexception message: "",
+               ctx: %{},
                error_code: "",
                current_word: "",
                params: [],
@@ -12,9 +15,9 @@ defmodule CucumberExpressions.Matcher.Failure do
                remaining_parse_tree: %{}
 
   @impl true
-  def exception({msg, error_code, m = matcher(), remaining_parse_tree}) do
+  def exception({ctx, error_code, m = matcher(), remaining_parse_tree}) do
     struct(__MODULE__, %{
-      message: msg,
+      ctx: ctx,
       error_code: error_code,
       current_word: matcher(m, :current_word),
       params: matcher(m, :params),
@@ -24,7 +27,7 @@ defmodule CucumberExpressions.Matcher.Failure do
     })
   end
 
-  def raise(msg, error_code, m = matcher(), remaining_parse_tree) do
-    Kernel.raise(__MODULE__, {msg, error_code, m, remaining_parse_tree})
+  def raise(ctx, error_code, m = matcher(), remaining_parse_tree) do
+    Kernel.reraise(__MODULE__, {ctx, error_code, m, remaining_parse_tree}, [])
   end
 end

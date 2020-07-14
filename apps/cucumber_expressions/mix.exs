@@ -28,7 +28,8 @@ defmodule CucumberExpressions.MixProject do
 
   defp deps do
     [
-      {:ex_debugger, "~> 0.1.0"}
+      # {:ex_debugger, "~> 0.1.0"}
+      {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger"}
     ]
   end
 end

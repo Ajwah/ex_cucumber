@@ -37,10 +37,10 @@ defmodule CucumberExpressions.ParameterType.Disambiguator do
         """
         This is impossible to happen.
         """
-        |> dd(:impossible_scenario)
+        # |> dd(:impossible_scenario)
         |> SyntaxError.raise(:impossible_case)
     end
-    |> dd(:run)
+    # |> dd(:run)
   end
 
   def run(nil, str), do: {:ok, {str, :inoperative}}

@@ -34,6 +34,7 @@ defmodule CucumberExpressions.Parser do
   alias __MODULE__.SyntaxError
   alias __MODULE__.ValidationError
 
+  use ExDebugger
   use ExDebugger.Manual
 
   def new(
@@ -52,7 +53,7 @@ defmodule CucumberExpressions.Parser do
            {:string_or_atom, current_word, is_binary(current_word) || is_atom(current_word)},
          {_, _, true} <- {:string, original_sentence, is_binary(original_sentence)},
          {_, _, true} <- {:map, collected_sentences, is_map(collected_sentences)},
-         {_, _, true} <- {:string, id, is_binary(id)},
+         {_, _, true} <- {:string_or_atom, id, is_binary(id) || is_atom(id)},
          {_, _, true} <- {:boolean, escaped_curly_bracket?, is_boolean(escaped_curly_bracket?)},
          {_, _, true} <- {:boolean, escaped_round_bracket?, is_boolean(escaped_round_bracket?)},
          {_, _, true} <- {:boolean, only_spaces_so_far?, is_boolean(only_spaces_so_far?)},
@@ -254,7 +255,8 @@ defmodule CucumberExpressions.Parser do
         |> process(rest)
         |> case do
           result ->
-            [subset_to_be_duplicated] = Map.values(result) |> Enum.uniq()
+            # [subset_to_be_duplicated] = Map.values(result) |> Enum.uniq()
+            subset_to_be_duplicated = Map.fetch!(result, current_word)
             Map.put(result, augmented_word, subset_to_be_duplicated)
         end
 
@@ -277,7 +279,8 @@ defmodule CucumberExpressions.Parser do
         |> process(rest)
         |> case do
           result ->
-            [subset_to_be_duplicated] = Map.values(result)
+            # dd(:optionals, :optionals)
+            subset_to_be_duplicated = Map.fetch!(result, current_word)
 
             Enum.reduce(
               alternatives,
@@ -494,7 +497,7 @@ defmodule CucumberExpressions.Parser do
             |> case do
               nil ->
                 Enum.reduce(next_words, %{}, fn e, a -> Map.put(a, e, param) end)
-                |> dd(:parser)
+                # |> dd(:parser)
 
               mapping ->
                 # mapping[next_word]
@@ -513,7 +516,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, param)
                       end
-                      |> dd(:parser)
+                      # |> dd(:parser)
 
                     ls when is_list(ls) ->
                       if param in ls do
@@ -521,7 +524,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param | ls])
                       end
-                      |> dd(:parser)
+                      # |> dd(:parser)
 
                     el ->
                       if param == el do
@@ -529,7 +532,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param, el])
                       end
-                      |> dd(:parser)
+                      # |> dd(:parser)
                   end
                 end)
             end

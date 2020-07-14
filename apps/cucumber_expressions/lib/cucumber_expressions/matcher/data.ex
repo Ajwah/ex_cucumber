@@ -6,13 +6,15 @@ defmodule CucumberExpressions.Matcher.Data do
     current_word: "",
     params: [],
     parameter_types: %{},
-    only_spaces_so_far?: false
+    only_spaces_so_far?: false,
+    ctx: %{}
 
   @type t() ::
           record(:matcher,
             current_word: String.t(),
             params: list,
             parameter_types: map,
-            only_spaces_so_far?: boolean
+            only_spaces_so_far?: boolean,
+            ctx: map
           )
 end

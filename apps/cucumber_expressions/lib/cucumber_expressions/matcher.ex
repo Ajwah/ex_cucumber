@@ -14,15 +14,17 @@ defmodule CucumberExpressions.Matcher do
 
   import __MODULE__.Data
 
+  use ExDebugger
   use ExDebugger.Manual
 
-  def run(sentence, %Parser{} = p, %ParameterType{} = pt) when is_binary(sentence) do
+  def run(sentence, %Parser{} = p, %ParameterType{} = pt, ctx \\ %{}) when is_binary(sentence) do
     setting_this_to_true_handles_preceding_spaces = true
 
     [
       current_word: "",
       only_spaces_so_far?: setting_this_to_true_handles_preceding_spaces,
-      parameter_types: pt.collection
+      parameter_types: pt.collection,
+      ctx: Map.put(ctx, :sentence, sentence)
     ]
     |> matcher
     |> process(sentence, p.result)
@@ -57,22 +59,23 @@ defmodule CucumberExpressions.Matcher do
              current_word: current_word,
              params: params,
              only_spaces_so_far?: false,
-             parameter_types: parameter_types
+             parameter_types: parameter_types,
+             ctx: ctx
            ),
          <<" ", rest::binary>>,
          parse_tree
        ) do
-    dd({}, :matcher)
+    # dd({}, :matcher)
 
     parse_tree
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        dd({:matcher0, :key_not_present}, :matcher)
-        Failure.raise("Unable to match: '#{current_word}'", :key_not_present, m, parse_tree)
+        # dd({:matcher0, :key_not_present}, :matcher)
+        Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
       {:process_until_next_match, next_keys} ->
-        dd({:matcher10, :process_until_next_match}, :matcher)
+        # dd({:matcher10, :process_until_next_match}, :matcher)
 
         {param_keys_so_far, remaining_param_keys} =
           next_keys
@@ -131,7 +134,7 @@ defmodule CucumberExpressions.Matcher do
                 [{param_key, failed_action, result} | failed_disambiguators]}}
           end
         end)
-        |> dd(:matcher12)
+        # |> dd(:matcher12)
         |> case do
           {:no_disambiguator_to_enforce, []} ->
             attempt_automated_submatch(next_keys, rest, parameter_types, m, parse_tree)
@@ -146,7 +149,7 @@ defmodule CucumberExpressions.Matcher do
               current_word: " ",
               only_spaces_so_far?: true
             )
-            |> dd(:matcher15)
+            # |> dd(:matcher15)
             |> process(
               Utils.strip_leading_space(remainder_sentence),
               parse_tree.params[param_key]
@@ -154,7 +157,7 @@ defmodule CucumberExpressions.Matcher do
         end
 
       subtree ->
-        dd({:matcher40, :subtree}, :matcher)
+        # dd({:matcher40, :subtree}, :matcher)
 
         m
         |> matcher(current_word: " ", only_spaces_so_far?: true)
@@ -177,7 +180,7 @@ defmodule CucumberExpressions.Matcher do
   # End of sentence. current_word potential key match to parse_tree
   defp process(
          m =
-           matcher(current_word: current_word, params: params, parameter_types: parameter_types),
+           matcher(current_word: current_word, params: params, parameter_types: parameter_types, ctx: ctx),
          "",
          parse_tree
        ) do
@@ -185,12 +188,12 @@ defmodule CucumberExpressions.Matcher do
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
+        # dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
 
-        Failure.raise("Unable to match: '#{current_word}'", :key_not_present, m, parse_tree)
+        Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
       {:process_until_next_match, next_key} ->
-        dd({:matcher53, :process_until_next_match, :end_of_sentence}, :matcher)
+        # dd({:matcher53, :process_until_next_match, :end_of_sentence}, :matcher)
 
         [param_key] =
           next_key
@@ -207,13 +210,13 @@ defmodule CucumberExpressions.Matcher do
             parse_tree.params[param_key]
             |> Map.put(:params, [{param_key, match} | params])
 
-          _ ->
+          q ->
             parse_tree.params[param_key]
-            |> Map.put(:params, [{param_key, current_word} | params])
+            |> Map.put(:params, [{param_key, Utils.strip_leading_space(current_word)} | params])
         end
 
       subtree ->
-        dd({:matcher55, :subtree, :end_of_sentence}, :matcher)
+        # dd({:matcher55, :subtree, :end_of_sentence}, :matcher)
 
         subtree
         |> Map.put(:params, params)
@@ -222,8 +225,6 @@ defmodule CucumberExpressions.Matcher do
 
   # New character to append for current_word.
   defp process(m = matcher(current_word: current_word), <<char::utf8, rest::binary>>, parse_tree) do
-    # dd({:matcher60, :new_char}, :matcher)
-
     m
     |> matcher(current_word: current_word <> <<char::utf8>>, only_spaces_so_far?: false)
     |> process(rest, parse_tree)
@@ -233,18 +234,18 @@ defmodule CucumberExpressions.Matcher do
          next_keys,
          rest,
          parameter_types,
-         m = matcher(current_word: current_word),
+         m = matcher(current_word: current_word, ctx: ctx),
          parse_tree
        ) do
     next_keys
     |> Submatcher.find(rest, parameter_types)
     |> case do
       :key_not_present ->
-        dd({:matcher25, :submatcher, :key_not_present}, :matcher)
+        # dd({:matcher25, :submatcher, :key_not_present}, :matcher)
 
         Failure.raise(
-          "Automated submatch failed. Unable to match: '#{current_word}'",
-          :key_not_present,
+          ctx,
+          :unable_to_auto_match_param,
           m,
           parse_tree
         )
@@ -267,7 +268,7 @@ defmodule CucumberExpressions.Matcher do
       {:remainder_sentence, remainder_sentence}
     } = potential_match
 
-    dd({:matcher30, :match}, :matcher)
+    # dd({:matcher30, :match}, :matcher)
 
     parse_tree
     |> ParseTree.param_subtree(current_key: current_key, next_key: next_key)
@@ -332,7 +333,7 @@ defmodule CucumberExpressions.Matcher do
           current_word: "",
           only_spaces_so_far?: true
         )
-        |> dd(:matcher)
+        # |> dd(:matcher)
         |> process(remainder_sentence, subtree)
     end
   end
@@ -361,6 +362,6 @@ defmodule CucumberExpressions.Matcher do
       {:ok, {_, current_val}} -> [{current_key, current_val} | params]
       error -> error
     end
-    |> dd(:matcher)
+    # |> dd(:matcher)
   end
 end
