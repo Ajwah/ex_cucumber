@@ -1,12 +1,10 @@
 defmodule Support.CucumberExpression do
   @moduledoc false
-  defstruct [
-    expression: "",
-    template: "",
-    template_to_expression_diff: [],
-    instances: [],
-    params_list: []
-  ]
+  defstruct expression: "",
+            template: "",
+            template_to_expression_diff: [],
+            instances: [],
+            params_list: []
 
   import ExUnit.Assertions
 
@@ -22,6 +20,7 @@ defmodule Support.CucumberExpression do
   def new(expression, [hd | _] = params_list) when is_binary(expression) and is_list(hd) do
     template = template(expression, hd)
     template_to_expression_diff = String.myers_difference(template, expression)
+
     struct(__MODULE__, %{
       expression: expression,
       template: template,
@@ -46,41 +45,49 @@ defmodule Support.CucumberExpression do
     |> elem(1)
   end
 
-  def instances(expression, [hd | _] = params_list, template_to_expression_diff) when is_binary(expression) and is_list(hd) do
+  def instances(expression, [hd | _] = params_list, template_to_expression_diff)
+      when is_binary(expression) and is_list(hd) do
     params_list
     |> Enum.map(&instance(expression, &1, template_to_expression_diff))
     |> alternatives
   end
 
-  def instance(expression, parameters, {template, template_to_expression_diff}) when is_binary(expression) and is_list(parameters) do
-    instance = parameters
+  def instance(expression, parameters, {template, template_to_expression_diff})
+      when is_binary(expression) and is_list(parameters) do
+    instance =
+      parameters
       |> Enum.reduce(expression, fn {k, v}, instantiated_cucumber_expression ->
         parameter_type_to_replace = custom_parameter_type(k)
         replacement = value(v)
 
-        String.replace(instantiated_cucumber_expression, parameter_type_to_replace, replacement, global: false)
+        String.replace(instantiated_cucumber_expression, parameter_type_to_replace, replacement,
+          global: false
+        )
       end)
-
 
     template_to_instance_diff = String.myers_difference(template, instance)
 
     if Enum.count(template_to_expression_diff) != Enum.count(template_to_instance_diff) do
-      IO.inspect(%{
-        expression: expression,
-        template: template,
-        instance: instance,
-        template_to_expression_diff: template_to_expression_diff,
-        template_to_instance_diff: template_to_instance_diff
-      }, label: :should_be_eql_length)
+      IO.inspect(
+        %{
+          expression: expression,
+          template: template,
+          instance: instance,
+          template_to_expression_diff: template_to_expression_diff,
+          template_to_instance_diff: template_to_instance_diff
+        },
+        label: :should_be_eql_length
+      )
+
       assert Enum.count(template_to_expression_diff) == Enum.count(template_to_instance_diff)
     end
 
     inferred_params =
       [
         template_to_expression_diff,
-        template_to_instance_diff,
+        template_to_instance_diff
       ]
-      |> List.zip
+      |> List.zip()
       |> Enum.reject(fn {a, b} -> a == b end)
       |> Enum.map(fn {{:ins, parameter_type}, {:ins, value}} ->
         {parameter_name(parameter_type), value}
@@ -94,7 +101,7 @@ defmodule Support.CucumberExpression do
         inferred: inferred_params,
         both: [parameters, inferred_params]
       },
-      instance: instance,
+      instance: instance
     }
   end
 
@@ -103,16 +110,19 @@ defmodule Support.CucumberExpression do
     |> Enum.reduce([], fn %{parameters: ps, instance: instance}, a ->
       instance
       |> optionals_to_alternatives
-      |> String.split
+      |> String.split()
       |> Enum.map(&String.split(&1, "/"))
       |> Enum.reduce([[]], fn
-        e, a when is_binary(e) -> Enum.map(a, &Kernel.++(&1, [e]))
-        ls, a when is_list(ls) -> Enum.reduce(a, [], fn growing_list, growing_lists ->
-          Enum.map(ls, &Kernel.++(growing_list, [&1])) ++ growing_lists
-        end)
+        e, a when is_binary(e) ->
+          Enum.map(a, &Kernel.++(&1, [e]))
+
+        ls, a when is_list(ls) ->
+          Enum.reduce(a, [], fn growing_list, growing_lists ->
+            Enum.map(ls, &Kernel.++(growing_list, [&1])) ++ growing_lists
+          end)
       end)
       |> Enum.map(&Enum.join(&1, " "))
-      |> Enum.map(&(%{parameters: ps, instance: &1}))
+      |> Enum.map(&%{parameters: ps, instance: &1})
       |> Kernel.++(a)
     end)
   end
@@ -128,5 +138,7 @@ defmodule Support.CucumberExpression do
   # defp placeholder(counter), do: "%#{counter}"
   defp value(v), do: "#{v}"
   defp custom_parameter_type(parameter_name), do: "{#{parameter_name}}"
-  defp parameter_name(<<"{", remainder::binary>>), do: String.trim_trailing(remainder, "}") |> String.to_atom
+
+  defp parameter_name(<<"{", remainder::binary>>),
+    do: String.trim_trailing(remainder, "}") |> String.to_atom()
 end

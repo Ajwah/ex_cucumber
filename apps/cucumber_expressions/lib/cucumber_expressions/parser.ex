@@ -497,7 +497,8 @@ defmodule CucumberExpressions.Parser do
             |> case do
               nil ->
                 Enum.reduce(next_words, %{}, fn e, a -> Map.put(a, e, param) end)
-                # |> dd(:parser)
+
+              # |> dd(:parser)
 
               mapping ->
                 # mapping[next_word]
@@ -516,7 +517,8 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, param)
                       end
-                      # |> dd(:parser)
+
+                    # |> dd(:parser)
 
                     ls when is_list(ls) ->
                       if param in ls do
@@ -524,7 +526,8 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param | ls])
                       end
-                      # |> dd(:parser)
+
+                    # |> dd(:parser)
 
                     el ->
                       if param == el do
@@ -532,6 +535,7 @@ defmodule CucumberExpressions.Parser do
                       else
                         Map.put(a, e, [param, el])
                       end
+
                       # |> dd(:parser)
                   end
                 end)

@@ -137,9 +137,13 @@ defmodule CucumberExpressions.MatcherTest do
       full_sentences =
         ctx.permutations
         |> Enum.map(&to_full_sentence.(&1))
-        # |> IO.inspect(label: :full_sentences)
 
-      Enum.each(full_sentences, &MatcherHelper.T.assert_match(&1, [ctx.cucumber_expression], :multiple_alternative_groups))
+      # |> IO.inspect(label: :full_sentences)
+
+      Enum.each(
+        full_sentences,
+        &MatcherHelper.T.assert_match(&1, [ctx.cucumber_expression], :multiple_alternative_groups)
+      )
     end
 
     test "only alternatives" do
@@ -172,7 +176,7 @@ defmodule CucumberExpressions.MatcherTest do
       full_sentences = [
         "X A1 A2 A3 A4",
         "Y A1 A2 A3 A4",
-        "Z A1 A2 A3 A4",
+        "Z A1 A2 A3 A4"
       ]
 
       cucumber_expression = "X/Y/Z A1 A2 A3 A4"
@@ -183,7 +187,7 @@ defmodule CucumberExpressions.MatcherTest do
       full_sentences = [
         "A1 A2 X A3 A4",
         "A1 A2 Y A3 A4",
-        "A1 A2 Z A3 A4",
+        "A1 A2 Z A3 A4"
       ]
 
       cucumber_expression = "A1 A2 X/Y/Z A3 A4"
@@ -194,7 +198,7 @@ defmodule CucumberExpressions.MatcherTest do
       full_sentences = [
         "A1 A2 A3 A4 X",
         "A1 A2 A3 A4 Y",
-        "A1 A2 A3 A4 Z",
+        "A1 A2 A3 A4 Z"
       ]
 
       cucumber_expression = "A1 A2 A3 A4 X/Y/Z"
@@ -635,11 +639,12 @@ defmodule CucumberExpressions.MatcherTest do
         {
           :ok,
           %{
-            bulk_cucumber_expressions: ctx.bulk_test_data
+            bulk_cucumber_expressions:
+              ctx.bulk_test_data
               |> Enum.map(fn {scenario, test_data} ->
                 %{
                   scenario: scenario,
-                  cucumber_expressions: Support.CucumberExpression.prepare_all(test_data),
+                  cucumber_expressions: Support.CucumberExpression.prepare_all(test_data)
                 }
               end)
           }
@@ -650,43 +655,52 @@ defmodule CucumberExpressions.MatcherTest do
     end
 
     @tag bulk_test_data: [
-      all_different: [
-        {:a, "A1 A2 A3 A4 A5", []},
-        {:b, "B1 B2 B3 B4 B5", []},
-        {:c, "C1 C2 C3 C4 C5", []},
-        {:d, "D1 D2 D3 D4 D5", []},
-      ], intersecting_beginning: [
-        {:a, "A1 A2 T3 A4 A5", []},
-        {:b, "B1 B2 T3 B4 B5", []},
-        {:c, "C1 C2 T3 C4 C5", []},
-        {:d, "D1 D2 T3 D4 D5", []},
-      ], intersecting_middle: [
-        {:a, "A1 A2 T3 A4 A5", []},
-        {:b, "B1 B2 T3 B4 B5", []},
-        {:c, "C1 C2 T3 C4 C5", []},
-        {:d, "D1 D2 T3 D4 D5", []},
-      ], intersecting_ending: [
-        {:a, "A1 A2 T3 A4 A5", []},
-        {:b, "B1 B2 T3 B4 B5", []},
-        {:c, "C1 C2 T3 C4 C5", []},
-        {:d, "D1 D2 T3 D4 D5", []},
-      ], intersecting_various: [
-        {:a, "A1 A2 T3 A4 A5", []},
-        {:b, "B1 A2 T3 B4 B5", []},
-        {:c, "C1 C2 T3 C4 C5", []},
-        {:d, "D1 D2 T3 C4 D5", []},
-      ]
-    ]
+           all_different: [
+             {:a, "A1 A2 A3 A4 A5", []},
+             {:b, "B1 B2 B3 B4 B5", []},
+             {:c, "C1 C2 C3 C4 C5", []},
+             {:d, "D1 D2 D3 D4 D5", []}
+           ],
+           intersecting_beginning: [
+             {:a, "A1 A2 T3 A4 A5", []},
+             {:b, "B1 B2 T3 B4 B5", []},
+             {:c, "C1 C2 T3 C4 C5", []},
+             {:d, "D1 D2 T3 D4 D5", []}
+           ],
+           intersecting_middle: [
+             {:a, "A1 A2 T3 A4 A5", []},
+             {:b, "B1 B2 T3 B4 B5", []},
+             {:c, "C1 C2 T3 C4 C5", []},
+             {:d, "D1 D2 T3 D4 D5", []}
+           ],
+           intersecting_ending: [
+             {:a, "A1 A2 T3 A4 A5", []},
+             {:b, "B1 B2 T3 B4 B5", []},
+             {:c, "C1 C2 T3 C4 C5", []},
+             {:d, "D1 D2 T3 D4 D5", []}
+           ],
+           intersecting_various: [
+             {:a, "A1 A2 T3 A4 A5", []},
+             {:b, "B1 A2 T3 B4 B5", []},
+             {:c, "C1 C2 T3 C4 C5", []},
+             {:d, "D1 D2 T3 C4 D5", []}
+           ]
+         ]
     test "Plain Cases", ctx do
       Enum.each(ctx.bulk_cucumber_expressions, &runner/1)
     end
 
     @tag test_data: [
-      {:summation, "The sum of {addend} and {addend} is {sum}", [addend: 1, addend: 2, sum: 3]},
-      {:differentiation, "The difference of {subtrahend} from {minuend} is {difference}", [subtrahend: 3, minuend: 6, difference: 3]},
-      {:multiplication, "The product of {multiplier} and {multiplicand} is {product}", [multiplier: 3, multiplicand: 4, product: 12]},
-      {:division, "The division of {dividend} by {divisor} is {quotient} with remainder {remainder}", [dividend: 12, divisor: 4, quotient: 3, remainder: 0]},
-    ]
+           {:summation, "The sum of {addend} and {addend} is {sum}",
+            [addend: 1, addend: 2, sum: 3]},
+           {:differentiation, "The difference of {subtrahend} from {minuend} is {difference}",
+            [subtrahend: 3, minuend: 6, difference: 3]},
+           {:multiplication, "The product of {multiplier} and {multiplicand} is {product}",
+            [multiplier: 3, multiplicand: 4, product: 12]},
+           {:division,
+            "The division of {dividend} by {divisor} is {quotient} with remainder {remainder}",
+            [dividend: 12, divisor: 4, quotient: 3, remainder: 0]}
+         ]
     test "Intersection first word only", ctx do
       runner(ctx, fn input, result ->
         assert Enum.reverse(result.params) in input.parameters.both
@@ -694,99 +708,108 @@ defmodule CucumberExpressions.MatcherTest do
     end
 
     @tag bulk_test_data: [
-      intersecting_beginning: [
-        {:a, "{Z} A1 A2 A3 A4", [Z: 1]},
-        {:b, "{Z} B1 B2 B3 B4", [Z: 2]},
-        {:c, "{Z} C1 C2 C3 C4", [Z: "ABCD"]},
-        {:d, "{Z} D1 D2 D3 D4", [Z: "."]},
-      ],
-      intersecting_middle: [
-        {:a, "A1 A2 {Z} A4 A5", [Z: 1]},
-        {:b, "B1 B2 {Z} B4 B5", [Z: 2]},
-        {:c, "C1 C2 {Z} C4 C5", [Z: "ABCD"]},
-        {:d, "D1 D2 {Z} D4 D5", [Z: "."]},
-      ],
-      intersecting_ending: [
-        {:a, "A1 A2 A3 A4 {Z}", [Z: 1]},
-        {:b, "B1 B2 B3 B4 {Z}", [Z: 2]},
-        {:c, "C1 C2 C3 C4 {Z}", [Z: "ABCD"]},
-        {:d, "D1 D2 D3 D4 {Z}", [Z: "."]},
-      ],
-      intersecting_various: [
-        {:a, "{Z} A1 A2 A3 A4 A5", [Z: 1]},
-        {:b, "{Z} B1 B2 {T} B4 B5", [Z: 2, T: 0]},
-        {:c, "C1 {Z} C2 {T} C4 C5", [Z: "ABCD", T: 1]},
-        {:d, "D1 {Z} D3 {T} D5", [Z: ".", T: 2]},
-      ],
-    ]
+           intersecting_beginning: [
+             {:a, "{Z} A1 A2 A3 A4", [Z: 1]},
+             {:b, "{Z} B1 B2 B3 B4", [Z: 2]},
+             {:c, "{Z} C1 C2 C3 C4", [Z: "ABCD"]},
+             {:d, "{Z} D1 D2 D3 D4", [Z: "."]}
+           ],
+           intersecting_middle: [
+             {:a, "A1 A2 {Z} A4 A5", [Z: 1]},
+             {:b, "B1 B2 {Z} B4 B5", [Z: 2]},
+             {:c, "C1 C2 {Z} C4 C5", [Z: "ABCD"]},
+             {:d, "D1 D2 {Z} D4 D5", [Z: "."]}
+           ],
+           intersecting_ending: [
+             {:a, "A1 A2 A3 A4 {Z}", [Z: 1]},
+             {:b, "B1 B2 B3 B4 {Z}", [Z: 2]},
+             {:c, "C1 C2 C3 C4 {Z}", [Z: "ABCD"]},
+             {:d, "D1 D2 D3 D4 {Z}", [Z: "."]}
+           ],
+           intersecting_various: [
+             {:a, "{Z} A1 A2 A3 A4 A5", [Z: 1]},
+             {:b, "{Z} B1 B2 {T} B4 B5", [Z: 2, T: 0]},
+             {:c, "C1 {Z} C2 {T} C4 C5", [Z: "ABCD", T: 1]},
+             {:d, "D1 {Z} D3 {T} D5", [Z: ".", T: 2]}
+           ]
+         ]
     test "Custom Parameter Type Cases", ctx do
-      Enum.each(ctx.bulk_cucumber_expressions, &runner(&1, fn input, result ->
-        assert Enum.reverse(result.params) in input.parameters.both
-      end))
+      Enum.each(
+        ctx.bulk_cucumber_expressions,
+        &runner(&1, fn input, result ->
+          assert Enum.reverse(result.params) in input.parameters.both
+        end)
+      )
     end
 
     @tag bulk_test_data: [
-      intersecting_beginning: [
-        {:a, "X/Y/Z A1 A2 A3 A4", []},
-        {:b, "X/Y/Z B1 B2 B3 B4", []},
-        {:c, "X/Y/Z C1 C2 C3 C4", []},
-        {:d, "X/Y/Z D1 D2 D3 D4", []},
-      ],
-      intersecting_middle: [
-        {:a, "A1 A2 X/Y/Z A4 A5", []},
-        {:b, "B1 B2 X/Y/Z B4 B5", []},
-        {:c, "C1 C2 X/Y/Z C4 C5", []},
-        {:d, "D1 D2 X/Y/Z D4 D5", []},
-      ],
-      intersecting_ending: [
-        {:a, "A1 A2 A3 A4 X/Y/Z", []},
-        {:b, "B1 B2 B3 B4 X/Y/Z", []},
-        {:c, "C1 C2 C3 C4 X/Y/Z", []},
-        {:d, "D1 D2 D3 D4 X/Y/Z", []},
-      ],
-      intersecting_various: [
-        {:a, "X/Y/Z A1 A2 A3 A4 A5", []},
-        {:b, "X/Y/Z B1 B2 Q/R/S B4 B5", []},
-        {:c, "C1 X/Y/Z C2 Q/R/S C4 C5", []},
-        {:d, "D1 X/Y/Z D3 Q/R/S D5", []},
-      ],
-    ]
+           intersecting_beginning: [
+             {:a, "X/Y/Z A1 A2 A3 A4", []},
+             {:b, "X/Y/Z B1 B2 B3 B4", []},
+             {:c, "X/Y/Z C1 C2 C3 C4", []},
+             {:d, "X/Y/Z D1 D2 D3 D4", []}
+           ],
+           intersecting_middle: [
+             {:a, "A1 A2 X/Y/Z A4 A5", []},
+             {:b, "B1 B2 X/Y/Z B4 B5", []},
+             {:c, "C1 C2 X/Y/Z C4 C5", []},
+             {:d, "D1 D2 X/Y/Z D4 D5", []}
+           ],
+           intersecting_ending: [
+             {:a, "A1 A2 A3 A4 X/Y/Z", []},
+             {:b, "B1 B2 B3 B4 X/Y/Z", []},
+             {:c, "C1 C2 C3 C4 X/Y/Z", []},
+             {:d, "D1 D2 D3 D4 X/Y/Z", []}
+           ],
+           intersecting_various: [
+             {:a, "X/Y/Z A1 A2 A3 A4 A5", []},
+             {:b, "X/Y/Z B1 B2 Q/R/S B4 B5", []},
+             {:c, "C1 X/Y/Z C2 Q/R/S C4 C5", []},
+             {:d, "D1 X/Y/Z D3 Q/R/S D5", []}
+           ]
+         ]
     test "Alternatives Cases", ctx do
-      Enum.each(ctx.bulk_cucumber_expressions, &runner(&1, fn input, result ->
-        assert Enum.reverse(result.params) in input.parameters.both
-      end))
+      Enum.each(
+        ctx.bulk_cucumber_expressions,
+        &runner(&1, fn input, result ->
+          assert Enum.reverse(result.params) in input.parameters.both
+        end)
+      )
     end
 
     @tag bulk_test_data: [
-      intersecting_beginning: [
-        {:a, "X(s) A1 A2 A3 A4", []},
-        {:b, "X(s) B1 B2 B3 B4", []},
-        {:c, "X(s) C1 C2 C3 C4", []},
-        {:d, "X(s) D1 D2 D3 D4", []},
-      ],
-      intersecting_middle: [
-        {:a, "A1 A2 X(s) A4 A5", []},
-        {:b, "B1 B2 X(s) B4 B5", []},
-        {:c, "C1 C2 X(s) C4 C5", []},
-        {:d, "D1 D2 X(s) D4 D5", []},
-      ],
-      intersecting_ending: [
-        {:a, "A1 A2 A3 A4 X(s)", []},
-        {:b, "B1 B2 B3 B4 X(s)", []},
-        {:c, "C1 C2 C3 C4 X(s)", []},
-        {:d, "D1 D2 D3 D4 X(s)", []},
-      ],
-      intersecting_various: [
-        {:a, "X(s) A1 A2 A3 A4 A5", []},
-        {:b, "X(s) B1 B2 Q(s) B4 B5", []},
-        {:c, "C1 X(s) C2 Q(s) C4 C5", []},
-        {:d, "D1 X(s) D3 Q(s) D5", []},
-      ],
-    ]
+           intersecting_beginning: [
+             {:a, "X(s) A1 A2 A3 A4", []},
+             {:b, "X(s) B1 B2 B3 B4", []},
+             {:c, "X(s) C1 C2 C3 C4", []},
+             {:d, "X(s) D1 D2 D3 D4", []}
+           ],
+           intersecting_middle: [
+             {:a, "A1 A2 X(s) A4 A5", []},
+             {:b, "B1 B2 X(s) B4 B5", []},
+             {:c, "C1 C2 X(s) C4 C5", []},
+             {:d, "D1 D2 X(s) D4 D5", []}
+           ],
+           intersecting_ending: [
+             {:a, "A1 A2 A3 A4 X(s)", []},
+             {:b, "B1 B2 B3 B4 X(s)", []},
+             {:c, "C1 C2 C3 C4 X(s)", []},
+             {:d, "D1 D2 D3 D4 X(s)", []}
+           ],
+           intersecting_various: [
+             {:a, "X(s) A1 A2 A3 A4 A5", []},
+             {:b, "X(s) B1 B2 Q(s) B4 B5", []},
+             {:c, "C1 X(s) C2 Q(s) C4 C5", []},
+             {:d, "D1 X(s) D3 Q(s) D5", []}
+           ]
+         ]
     test "Optionals Cases", ctx do
-      Enum.each(ctx.bulk_cucumber_expressions, &runner(&1, fn input, result ->
-        assert Enum.reverse(result.params) in input.parameters.both
-      end))
+      Enum.each(
+        ctx.bulk_cucumber_expressions,
+        &runner(&1, fn input, result ->
+          assert Enum.reverse(result.params) in input.parameters.both
+        end)
+      )
     end
 
     def runner(ctx, fun) do
@@ -796,9 +819,13 @@ defmodule CucumberExpressions.MatcherTest do
         e.instances
         |> Enum.each(fn input = %{parameters: _, instance: instance} ->
           instance
-          |> MatcherHelper.T.assert_match_yield(ctx.cucumber_expressions.all, ctx[:scenario], fn result ->
-            fun.(input, result)
-          end)
+          |> MatcherHelper.T.assert_match_yield(
+            ctx.cucumber_expressions.all,
+            ctx[:scenario],
+            fn result ->
+              fun.(input, result)
+            end
+          )
         end)
       end)
     end

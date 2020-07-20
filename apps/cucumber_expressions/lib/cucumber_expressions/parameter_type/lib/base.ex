@@ -22,8 +22,6 @@ defmodule CucumberExpressions.ParameterType.Base do
           transformer: setup_transformer(input)
           # opts: input[:opts],
         })
-
-        # |> IO.inspect(label: :t)
       end
 
       def setup_transformer(input) do

@@ -33,13 +33,14 @@ defmodule CucumberExpressions.ParameterType.Disambiguator do
           matches -> {:error, {:last_word_failed_match, {r, str, matches}}}
         end
 
-      failure ->
+      _failure ->
         """
         This is impossible to happen.
         """
         # |> dd(:impossible_scenario)
         |> SyntaxError.raise(:impossible_case)
     end
+
     # |> dd(:run)
   end
 

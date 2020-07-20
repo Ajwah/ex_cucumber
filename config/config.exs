@@ -22,6 +22,11 @@ config :ex_gherkin,
 config :ex_cucumber,
   feature_dir: "#{File.cwd!()}/apps/ex_cucumber/test/support/features",
   project_root: File.cwd!(),
-  macro_style: :module, # [:def, :module]
-  error_detail_level: :verbose, # [:brief, :verbose]
+  # [:def, :module]
+  macro_style: :module,
+  # [:brief, :verbose]
+  error_detail_level: :verbose,
+  best_practices: %{
+    disallow_gherkin_token_usage_mismatch?: false
+  },
   placeholder: "This is to serve as a placeholder"

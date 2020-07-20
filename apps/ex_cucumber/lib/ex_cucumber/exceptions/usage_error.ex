@@ -1,7 +1,7 @@
-defmodule ExCucumber.Config.ConfigurationError do
+defmodule ExCucumber.Exceptions.UsageError do
   @moduledoc false
   import Kernel, except: [raise: 2]
-  alias ExCucumber.Failure.Messages
+  alias ExCucumber.Exceptions.Messages
 
   defexception error_code: "",
                ctx: %{}
@@ -20,10 +20,10 @@ defmodule ExCucumber.Config.ConfigurationError do
   end
 
   def raise(error_code) do
-    Kernel.reraise(__MODULE__, {error_code, nil}, [])
+    Kernel.raise(__MODULE__, {error_code, nil})
   end
 
   def raise(ctx, error_code) do
-    Kernel.reraise(__MODULE__, {error_code, ctx}, [])
+    Kernel.raise(__MODULE__, {error_code, ctx})
   end
 end

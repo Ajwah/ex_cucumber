@@ -71,7 +71,7 @@ defmodule CucumberExpressions.Matcher do
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        # dd({:matcher0, :key_not_present}, :matcher)
+        dd({:matcher0, :key_not_present}, :matcher)
         Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
       {:process_until_next_match, next_keys} ->
@@ -180,7 +180,12 @@ defmodule CucumberExpressions.Matcher do
   # End of sentence. current_word potential key match to parse_tree
   defp process(
          m =
-           matcher(current_word: current_word, params: params, parameter_types: parameter_types, ctx: ctx),
+           matcher(
+             current_word: current_word,
+             params: params,
+             parameter_types: parameter_types,
+             ctx: ctx
+           ),
          "",
          parse_tree
        ) do
@@ -188,7 +193,7 @@ defmodule CucumberExpressions.Matcher do
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        # dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
+        dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
 
         Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
@@ -241,7 +246,7 @@ defmodule CucumberExpressions.Matcher do
     |> Submatcher.find(rest, parameter_types)
     |> case do
       :key_not_present ->
-        # dd({:matcher25, :submatcher, :key_not_present}, :matcher)
+        dd({:matcher25, :submatcher, :key_not_present}, :matcher)
 
         Failure.raise(
           ctx,
@@ -258,7 +263,12 @@ defmodule CucumberExpressions.Matcher do
   defp potential_param_match(
          potential_match,
          m =
-           matcher(current_word: current_word, params: params, parameter_types: parameter_types),
+           matcher(
+             current_word: current_word,
+             params: params,
+             parameter_types: parameter_types,
+             ctx: ctx
+           ),
          parse_tree
        ) do
     {
@@ -305,15 +315,27 @@ defmodule CucumberExpressions.Matcher do
         )
 
       subtree ->
-        {:ok, subtree, remainder_sentence,
-         update_params(
-           current_key,
-           current_word <> subsentence_until_next_key,
-           next_key,
-           :__none__,
-           params,
-           parameter_types
-         )}
+        to_be_matched = current_word <> subsentence_until_next_key
+
+        current_key
+        |> update_params(
+          to_be_matched,
+          params,
+          parameter_types
+        )
+        |> case do
+          {:error, operation, error} ->
+            Failure.raise(
+              ctx,
+              %{param_key: current_key, value: to_be_matched},
+              :unable_to_match_param,
+              m,
+              parse_tree
+            )
+
+          updated_params ->
+            {:ok, subtree, remainder_sentence, updated_params}
+        end
     end
   end
 
@@ -341,8 +363,6 @@ defmodule CucumberExpressions.Matcher do
   defp update_params(
          current_key,
          current_word,
-         next_key,
-         extra_param_value,
          params,
          parameter_types
        ) do
@@ -352,7 +372,12 @@ defmodule CucumberExpressions.Matcher do
     |> ParameterType.run(current_key, current_word, false)
     |> case do
       :parameter_type_not_present ->
-        IO.puts("No parameter type defined")
+        IO.puts(
+          "No parameter type defined: current_key: #{inspect(current_key)} current_word: #{
+            inspect(current_word)
+          } so resorted to auto-match instead."
+        )
+
         {:ok, {current_key, current_word}}
 
       result ->
@@ -362,6 +387,7 @@ defmodule CucumberExpressions.Matcher do
       {:ok, {_, current_val}} -> [{current_key, current_val} | params]
       error -> error
     end
+
     # |> dd(:matcher)
   end
 end

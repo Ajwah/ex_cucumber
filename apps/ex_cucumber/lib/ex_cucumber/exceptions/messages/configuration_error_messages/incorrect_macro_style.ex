@@ -1,11 +1,11 @@
-defmodule ExCucumber.Failure.Messages.IncorrectMacroStyle do
+defmodule ExCucumber.Exceptions.Messages.IncorrectMacroStyle do
   @moduledoc false
   alias ExCucumber.Config
-  alias ExCucumber.Config.ConfigurationError
+  alias ExCucumber.Exceptions.ConfigurationError
 
   def render(%ConfigurationError{error_code: :incorrect_macro_style}, :brief) do
     """
-      Valid options are: #{Config.macro_styles |> Enum.join(", ")}
+    Valid options are: #{Config.macro_styles() |> Enum.join(", ")}
     """
   end
 
@@ -16,7 +16,7 @@ defmodule ExCucumber.Failure.Messages.IncorrectMacroStyle do
     `config.exs` contains a non-existent macro style
 
     Valid options are:
-    #{Utils.bullitize(Config.macro_styles)}
+    #{Utils.bullitize(Config.macro_styles())}
 
     ## Quick Fix
     Add following
@@ -24,5 +24,4 @@ defmodule ExCucumber.Failure.Messages.IncorrectMacroStyle do
     ## Details
     """
   end
-
 end

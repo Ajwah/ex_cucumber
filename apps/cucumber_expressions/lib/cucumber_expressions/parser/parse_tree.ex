@@ -37,9 +37,14 @@ defmodule CucumberExpressions.Parser.ParseTree do
             end
 
           subtree ->
-            subtree
+            if next_key == :end do
+              first_subtree
+            else
+              subtree
+            end
         end
     end
+
     # |> dd(:parse_tree)
   end
 
@@ -47,27 +52,30 @@ defmodule CucumberExpressions.Parser.ParseTree do
     parse_tree
     |> Map.get(potential_key, :key_not_present)
     |> case do
-      :key_not_present ->
-        if p2p = parse_tree[:p2p] do
-          p2p
-          |> case do
-            empty_map when empty_map == %{} ->
-              :key_not_present
-
-            params ->
-              {
-                :potential_param_to_param_matches,
-                {:params_to_check, params},
-                {:param_value, potential_key}
-              }
-          end
-        else
-          :key_not_present
-        end
-
+      :key_not_present -> :key_not_present
       previous_key ->
         {:potential_param_to_value_match, {:matching_key, potential_key},
          {:previous_key, previous_key}}
+    end
+  end
+
+  # Accumulates all the cucumber expressions under `:end` key
+  def endings(parse_tree, acc \\ []) do
+    cond do
+      is_map(parse_tree) and parse_tree[:end] ->
+        [parse_tree[:end] | acc]
+
+      is_map(parse_tree) ->
+        endings(Map.values(parse_tree), acc)
+
+      is_list(parse_tree) ->
+        parse_tree
+        |> Enum.reduce(acc, fn e, a ->
+          endings(e, a)
+        end)
+
+      true ->
+        acc
     end
   end
 end

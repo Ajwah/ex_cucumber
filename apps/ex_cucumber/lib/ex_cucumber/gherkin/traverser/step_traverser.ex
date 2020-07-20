@@ -3,14 +3,54 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
 
   # alias ExCucumber.Gherkin.Traverser, as: MainTraverser
   alias ExCucumber.Gherkin.Traverser.Ctx
+
   alias CucumberExpressions.{
-    Matcher,
-    ParameterType,
+    Matcher
+    # ParameterType,
     # Parser
   }
 
+  use ExDebugger.Manual
+
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
-    m = Matcher.run(s.text, parse_tree, ParameterType.new, Ctx.update(acc, location: Map.from_struct(s.location), token: s.token, keyword: s.keyword))
-    acc.module.execute_mfa(to_string(m.id), m.id, 1) |> IO.inspect
+    ctx =
+      acc
+      |> Ctx.update(location: Map.from_struct(s.location), token: s.token, keyword: s.keyword)
+
+    m = Matcher.run(s.text, parse_tree, acc.parameter_type, ctx)
+    params = Enum.reverse(m.params)
+
+    {result, def_meta} =
+      ctx
+      |> Ctx.extra(%{
+        fun: m.id,
+        cucumber_expression: s.text
+      })
+      |> acc.module.execute_mfa(%{params: params, history: acc.extra.history})
+      |> dd(:run)
+
+    event = %{
+      feature_file: %{
+        text: s.text,
+        location: ctx.location,
+        keyword: ctx.keyword
+      },
+      cucumber_expression: cucumber_expression(def_meta),
+      params: params,
+      token: ctx.token,
+      result: result
+    }
+
+    Ctx.extra(acc, %{
+      history: [event | acc.extra.history]
+    })
+  end
+
+  defp cucumber_expression(def_meta) do
+    %{
+      formulation: def_meta.cucumber_expression.formulation,
+      line: def_meta.line,
+      macro: def_meta.macro_usage_gherkin_keyword
+    }
   end
 end

@@ -1,18 +1,19 @@
-defmodule ExCucumber.Failure.Messages.UnableToMatch do
+defmodule ExCucumber.Exceptions.Messages.UnableToMatch do
   @moduledoc false
-  alias CucumberExpressions.Matcher.Failure
-  alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
-  alias ExCucumber.Failure.Messages.Common, as: CommonMessages
+  alias ExCucumber.Exceptions.MatchFailure
+  alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
 
-  def render(%Failure{error_code: :unable_to_match} = f, :brief) do
+  def render(%MatchFailure{error_code: :unable_to_match} = f, :brief) do
     module_name = f.ctx.__struct__.module_name(f.ctx)
+
     """
     Unable To Match: #{Utils.smart_quotes(f.ctx.sentence)} in `#{module_name}`
     """
   end
 
-  def render(%Failure{error_code: :unable_to_match} = f, :verbose) do
+  def render(%MatchFailure{error_code: :unable_to_match} = f, :verbose) do
     module_name = f.ctx.__struct__.module_name(f.ctx)
+
     """
     # Unable To Match
     ## Summary
@@ -29,10 +30,14 @@ defmodule ExCucumber.Failure.Messages.UnableToMatch do
 
     ## Details
     * Error: Unable To Match
-    * Feature File: `#{Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)}`
+    * Feature File: `#{
+      Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
+    }`
     * Module: `#{module_name}`
     * Cause: Missing `cucumber expression` for: #{Utils.smart_quotes(f.ctx.sentence)}
+    * extra: #{inspect(f.extra, pretty: true)}
     """
+
     # * Gherkin Keyword: #{f.ctx.keyword}
     # * Gherkin Keyword Token: #{f.ctx.token}
     # * Macro: #{f.ctx.inferred.macro}
@@ -40,5 +45,4 @@ defmodule ExCucumber.Failure.Messages.UnableToMatch do
     #   - Line: #{f.ctx.location.line}
     #   - Column: #{f.ctx.location.column}
   end
-
 end

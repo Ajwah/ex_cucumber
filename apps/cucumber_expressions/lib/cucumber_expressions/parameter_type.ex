@@ -10,12 +10,13 @@ defmodule CucumberExpressions.ParameterType do
   defstruct collection: %{}
 
   def new do
-    struct(__MODULE__)
+    __MODULE__
+    |> struct
+    |> add_canonicals
   end
 
   def new(input) do
-    __MODULE__
-    |> struct
+    new()
     |> add(input)
   end
 
@@ -53,10 +54,26 @@ defmodule CucumberExpressions.ParameterType do
         {:ok, {parameter_key, result}}
       end
     else
-      {:retrieve_parameter_type, _} -> :parameter_type_not_present
-      {failed_action, {:error, error}} -> {:error, failed_action, error}
-      pipe_break -> pipe_break
+      {:retrieve_parameter_type, _} ->
+        :parameter_type_not_present
+
+      {failed_action, {:error, error}} ->
+        {:error, failed_action, error}
+
+      pipe_break ->
+        pipe_break
     end
+  end
+
+  defp add_canonicals(%__MODULE__{} = p) do
+    __MODULE__.Canonical.all()
+    |> Enum.reduce(p, &add_canonical/2)
+  end
+
+  defp add_canonical(input, %__MODULE__{} = p) do
+    custom_param_type = __MODULE__.Canonical.new(input)
+
+    %{p | collection: Map.put(p.collection, custom_param_type.name, custom_param_type)}
   end
 
   defp disambiguate(parameter_type, input) do

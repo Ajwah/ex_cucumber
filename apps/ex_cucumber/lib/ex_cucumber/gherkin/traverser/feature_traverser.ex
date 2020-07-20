@@ -6,7 +6,7 @@ defmodule ExCucumber.Gherkin.Traverser.Feature do
   def run(%ExGherkin.AstNdjson.Feature{} = f, acc, parse_tree) do
     f.children
     |> Enum.each(fn
-        %{scenario: scenario} -> MainTraverser.run(scenario, acc, parse_tree)
+      %{scenario: scenario} -> MainTraverser.run(scenario, acc, parse_tree)
     end)
   end
 end

@@ -7,7 +7,6 @@ defmodule Utils do
     Random
   }
 
-
   defdelegate id, to: Random
   defdelegate id(a), to: Random
   defdelegate length, to: Random
@@ -40,5 +39,6 @@ defmodule Utils do
   def atomize(s, :use_backticks), do: s |> atomize(:no_backticks) |> backtick
   def backtick(s) when is_binary(s), do: "`#{s}`"
   defp bulletize_mode(item, :as_atoms), do: item |> atomize
+  defp bulletize_mode(item, :as_smart_quoted_strings), do: smart_quotes(item)
   defp bulletize_mode(item, _), do: "#{item}"
 end

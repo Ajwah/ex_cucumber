@@ -1,11 +1,11 @@
-defmodule ExCucumber.Failure.Messages.IncorrectErrorLevelDetail do
+defmodule ExCucumber.Exceptions.Messages.IncorrectErrorLevelDetail do
   @moduledoc false
   alias ExCucumber.Config
-  alias ExCucumber.Config.ConfigurationError
+  alias ExCucumber.Exceptions.ConfigurationError
 
   def render(%ConfigurationError{error_code: :incorrect_error_level_detail}, :brief) do
     """
-      Valid options are: #{Config.error_detail_levels |> Enum.join(", ")}
+    Valid options are: #{Config.error_detail_levels() |> Enum.join(", ")}
     """
   end
 
@@ -16,7 +16,7 @@ defmodule ExCucumber.Failure.Messages.IncorrectErrorLevelDetail do
     `config.exs` contains a non-existent verbosity level for error messages.
 
     Valid options are:
-    #{Utils.bullitize(Config.error_detail_levels)}
+    #{Utils.bullitize(Config.error_detail_levels())}
 
     ## Quick Fix
     Add following
@@ -24,5 +24,4 @@ defmodule ExCucumber.Failure.Messages.IncorrectErrorLevelDetail do
     ## Details
     """
   end
-
 end

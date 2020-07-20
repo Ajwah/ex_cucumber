@@ -96,9 +96,15 @@ defmodule CucumberExpressions.Matcher.Submatcher do
     |> ParseTree.next_key_match(current_word)
     |> case do
       :key_not_present ->
-        {:key_not_present, s}
-        # |> dd(:submatcher)
-        :key_not_present
+        if key = potential_submatches[:end] do
+          {:potential_param_to_value_match,
+           {{:matching_key, :end}, {:previous_key, key},
+            {:subsentence_so_far, previous_subsentence <> current_word},
+            {:remainder_sentence, ""}}}
+          |> dd(:submatcher)
+        else
+          :key_not_present
+        end
 
       {:potential_param_to_value_match, matching_key, previous_key} ->
         {:potential_param_to_value_match,

@@ -9,17 +9,19 @@ defmodule CucumberExpressions.Matcher.Failure do
                ctx: %{},
                error_code: "",
                current_word: "",
+               extra: %{},
                params: [],
                only_spaces_so_far?: false,
                parameter_types: %{},
                remaining_parse_tree: %{}
 
   @impl true
-  def exception({ctx, error_code, m = matcher(), remaining_parse_tree}) do
+  def exception({ctx, extra, error_code, m = matcher(), remaining_parse_tree}) do
     struct(__MODULE__, %{
       ctx: ctx,
       error_code: error_code,
       current_word: matcher(m, :current_word),
+      extra: extra |> Map.put(:remaining_parse_tree, remaining_parse_tree),
       params: matcher(m, :params),
       only_spaces_so_far?: matcher(m, :only_spaces_so_far?),
       parameter_types: matcher(m, :parameter_types),
@@ -28,6 +30,10 @@ defmodule CucumberExpressions.Matcher.Failure do
   end
 
   def raise(ctx, error_code, m = matcher(), remaining_parse_tree) do
-    Kernel.reraise(__MODULE__, {ctx, error_code, m, remaining_parse_tree}, [])
+    Kernel.reraise(__MODULE__, {ctx, %{}, error_code, m, remaining_parse_tree}, [])
+  end
+
+  def raise(ctx, extra, error_code, m = matcher(), remaining_parse_tree) do
+    Kernel.reraise(__MODULE__, {ctx, extra, error_code, m, remaining_parse_tree}, [])
   end
 end

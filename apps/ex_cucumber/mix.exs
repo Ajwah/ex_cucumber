@@ -10,12 +10,12 @@ defmodule ExCucumber.MixProject do
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
       elixir: "~> 1.9",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger],
@@ -23,13 +23,15 @@ defmodule ExCucumber.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp elixirc_paths(:test), do: ["lib", "test/helpers"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
     [
       {:cucumber_expressions, in_umbrella: true},
       {:utils, in_umbrella: true},
       {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger"},
-      {:ex_gherkin, path: "/Users/kevinjohnson/projects/ex_gherkin"},
+      {:ex_gherkin, path: "/Users/kevinjohnson/projects/ex_gherkin"}
     ]
   end
 end

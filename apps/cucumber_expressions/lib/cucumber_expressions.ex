@@ -11,7 +11,10 @@ defmodule CucumberExpressions do
   def parse(sentence, collected_sentences, id \\ Utils.id(:fixed))
 
   def parse(sentence, nil, id), do: parse(sentence, %{}, id)
-  def parse(sentence, %CucumberExpressions.Parser{result: result}, id), do: parse(sentence, result, id)
+
+  def parse(sentence, %CucumberExpressions.Parser{result: result}, id),
+    do: parse(sentence, result, id)
+
   # def parse(sentences, collected_sentences, id) when is_list(sentences) do
   #   sentences
   #   |> Enum.
