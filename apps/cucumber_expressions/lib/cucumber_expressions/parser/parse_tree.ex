@@ -52,7 +52,9 @@ defmodule CucumberExpressions.Parser.ParseTree do
     parse_tree
     |> Map.get(potential_key, :key_not_present)
     |> case do
-      :key_not_present -> :key_not_present
+      :key_not_present ->
+        :key_not_present
+
       previous_key ->
         {:potential_param_to_value_match, {:matching_key, potential_key},
          {:previous_key, previous_key}}

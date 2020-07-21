@@ -5,6 +5,7 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
   alias ExCucumber.Gherkin.Traverser, as: MainTraverser
 
   def run(%ExGherkin.AstNdjson.Scenario{} = s, acc, parse_tree) do
+    # IO.inspect(s, label: :s)
     s.steps
     |> Enum.reduce(Ctx.extra(acc, %{history: []}), fn
       %ExGherkin.AstNdjson.Step{} = step, a ->

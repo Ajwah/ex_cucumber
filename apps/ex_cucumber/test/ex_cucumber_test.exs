@@ -20,6 +20,8 @@ defmodule ExCucumberTest do
   @support_module_files %{
     CreateEmployeeFeatures.WithStepOmitted =>
       "#{@support_module_dir}/create_employee_features/with_step_omitted.ex",
+    CreateEmployeeFeatures.WithDataTable =>
+      "#{@support_module_dir}/create_employee_features/with_data_table.ex",
     CreateEmployeeFeatures.WithInvalidParam =>
       "#{@support_module_dir}/create_employee_features/with_invalid_param.ex",
     OptionalsAlternatives.WithAllRelevantCombinations =>
@@ -100,6 +102,13 @@ defmodule ExCucumberTest do
       refute_raise(fn ->
         recompile(ctx)
       end)
+    end
+
+    @tag test_module: CreateEmployeeFeatures.WithDataTable
+    test "Handles Scenario Outline", ctx do
+      # refute_raise(fn ->
+      recompile(ctx)
+      # end)
     end
   end
 

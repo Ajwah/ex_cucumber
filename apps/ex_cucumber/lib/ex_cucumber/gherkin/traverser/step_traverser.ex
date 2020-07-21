@@ -10,6 +10,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
     # Parser
   }
 
+  alias ExGherkin.AstNdjson.Step.DataTable
   use ExDebugger.Manual
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
@@ -26,7 +27,11 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
         fun: m.id,
         cucumber_expression: s.text
       })
-      |> acc.module.execute_mfa(%{params: params, history: acc.extra.history})
+      |> acc.module.execute_mfa(%{
+        params: params,
+        data_table: DataTable.to_map(s.dataTable),
+        history: acc.extra.history
+      })
       |> dd(:run)
 
     event = %{
