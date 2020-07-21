@@ -3,6 +3,7 @@ defmodule ExCucumber.Gherkin.Traverser do
   alias __MODULE__.Ctx
   alias __MODULE__.Feature, as: FeatureTraverser
   alias __MODULE__.Background, as: BackgroundTraverser
+  alias __MODULE__.Rule, as: RuleTraverser
   alias __MODULE__.Scenario, as: ScenarioTraverser
   alias __MODULE__.Step, as: StepTraverser
 
@@ -19,6 +20,9 @@ defmodule ExCucumber.Gherkin.Traverser do
 
   def run(%ExGherkin.AstNdjson.Background{} = f, acc, parse_tree),
     do: BackgroundTraverser.run(f, acc, parse_tree)
+
+  def run(%ExGherkin.AstNdjson.Rule{} = f, acc, parse_tree),
+    do: RuleTraverser.run(f, acc, parse_tree)
 
   def run(%ExGherkin.AstNdjson.Scenario{token: _} = f, acc, parse_tree),
     do: ScenarioTraverser.run(f, acc, parse_tree)
