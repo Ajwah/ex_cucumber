@@ -7,6 +7,8 @@ defmodule ExCucumber.DocumentationResources do
       "https://cucumber.io/blog/collaboration/the-worlds-most-misunderstood-collaboration-tool/",
     duplicate_step_definition:
       "https://cucumber.io/docs/community/faq/#duplicate-step-definition",
+    duplicate_step_definition_reason: "https://cucumber.io/docs/gherkin/reference/#steps",
+    gherkin_token_mismatch: "https://github.com/cucumber/cucumber/issues/768",
     gherkin_spec: %{
       homonyms: @todo
     }

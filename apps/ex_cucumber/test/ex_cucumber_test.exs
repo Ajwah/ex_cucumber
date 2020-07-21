@@ -8,6 +8,7 @@ defmodule ExCucumberTest do
   alias ExCucumber.Exceptions.MatchFailure
 
   alias Support.{
+    BookStoreFeature,
     CreateEmployeeFeatures,
     OptionalsAlternatives,
     Params
@@ -27,7 +28,9 @@ defmodule ExCucumberTest do
     OptionalsAlternatives.WithAllRelevantCombinations =>
       "#{@support_module_dir}/optionals_alternatives_feature/with_all_relevant_combinations.ex",
     Params.Canonical => "#{@support_module_dir}/params/canonical.ex",
-    Params.Custom => "#{@support_module_dir}/params/custom.ex"
+    Params.Custom => "#{@support_module_dir}/params/custom.ex",
+    BookStoreFeature.DemonstrateBackgroundUsage =>
+      "#{@support_module_dir}/book_store_feature/demonstrate_background_usage.ex"
   }
 
   setup_all do
@@ -106,9 +109,16 @@ defmodule ExCucumberTest do
 
     @tag test_module: CreateEmployeeFeatures.WithDataTable
     test "Handles Scenario Outline", ctx do
-      # refute_raise(fn ->
-      recompile(ctx)
-      # end)
+      refute_raise(fn ->
+        recompile(ctx)
+      end)
+    end
+
+    @tag test_module: BookStoreFeature.DemonstrateBackgroundUsage
+    test "Handles Background", ctx do
+      refute_raise(fn ->
+        recompile(ctx)
+      end)
     end
   end
 

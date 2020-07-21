@@ -44,12 +44,17 @@ defmodule ExCucumber.Exceptions.Messages.GherkinTokenMismatch do
     #{CommonMessages.render(:macro_usage, e.ctx, e.ctx.extra.cucumber_expression)}
 
     ## Details
-    Originally `Cucumber` does not distinguish between Gherkin Keywords: #{
-      DocumentationResources.link(:duplicate_step_definition)
-    }.
-    This facilitates abstraction of your step definitions to encompass many more situations. The issue that can come about is that
-    one could be importing the wrong variant of the step definition. By setting `:disallow_gherkin_token_usage_mismatch?` to `true`,
-    you are able to account for this discrepancy.
+    `Cucumber` does not distinguish between Gherkin Keywords:
+    * #{DocumentationResources.link(:duplicate_step_definition)}
+    * #{DocumentationResources.link(:duplicate_step_definition_reason)}
+
+    This practically means that the actual text only is taken into consideration when matching a `cucumber expression`
+    against it; and thus technically speaking even though one used `Given` as a keyword, one could coin the `cucumber`
+    `expression` with a `When` keyword instead. This discrepancy could lead to documentation drift and thus to account
+    for this; one could leverage `disallow_gherkin_token_usage_mismatch?: true`.
+
+    Kindly see this issue for more details:
+    * #{DocumentationResources.link(:gherkin_token_mismatch)}
 
     #{extra_detail(e)}
     """

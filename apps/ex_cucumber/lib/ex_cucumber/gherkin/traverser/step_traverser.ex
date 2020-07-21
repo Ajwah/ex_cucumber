@@ -15,8 +15,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
     ctx =
-      acc
-      |> Ctx.update(location: Map.from_struct(s.location), token: s.token, keyword: s.keyword)
+      Ctx.update(acc, location: Map.from_struct(s.location), token: s.token, keyword: s.keyword)
 
     m = Matcher.run(s.text, parse_tree, acc.parameter_type, ctx)
     params = Enum.reverse(m.params)
@@ -28,8 +27,10 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
         cucumber_expression: s.text
       })
       |> acc.module.execute_mfa(%{
+        state: acc.extra.state,
         params: params,
-        data_table: DataTable.to_map(s.dataTable),
+        doc_string: s.docString,
+        data_table: DataTable.to_map(s.dataTable, examples(acc.extra)),
         history: acc.extra.history
       })
       |> dd(:run)
@@ -46,8 +47,16 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
       result: result
     }
 
+    state =
+      result
+      |> case do
+        {:ok, new_state} -> new_state
+        _ -> acc.extra.state
+      end
+
     Ctx.extra(acc, %{
-      history: [event | acc.extra.history]
+      history: [event | acc.extra.history],
+      state: state
     })
   end
 
@@ -57,5 +66,13 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
       line: def_meta.line,
       macro: def_meta.macro_usage_gherkin_keyword
     }
+  end
+
+  defp examples(extra) do
+    if Map.has_key?(extra, :examples) do
+      extra.examples.row
+    else
+      %{}
+    end
   end
 end
