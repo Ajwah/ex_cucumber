@@ -47,8 +47,8 @@ defmodule Support.RuleFeature.DslIdea do
     end
 
     example "battle" do
-      When.delegate "I attack it"
-      Then.delegate "it should die"
+      When.delegate("I attack it")
+      Then.delegate("it should die")
     end
   end
 
@@ -62,7 +62,7 @@ defmodule Support.RuleFeature.DslIdea do
         :source_additional_state
       end
 
-      Given.delegate "I attack the monster and do {int} points damage"
+      Given.delegate("I attack the monster and do {int} points damage")
     end
 
     example "battle" do
@@ -70,7 +70,7 @@ defmodule Support.RuleFeature.DslIdea do
         :source_additional_state
       end
 
-      Then.delegate "it should die"
+      Then.delegate("it should die")
     end
   end
 end
