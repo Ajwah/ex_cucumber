@@ -1,7 +1,10 @@
 defmodule ExCucumber.Exceptions.Messages.IncorrectMacroStyle do
   @moduledoc false
-  alias ExCucumber.Config
-  alias ExCucumber.Exceptions.ConfigurationError
+  alias ExCucumber.{
+    Config,
+    Exceptions.ConfigurationError,
+    Utils,
+  }
 
   def render(%ConfigurationError{error_code: :incorrect_macro_style}, :brief) do
     """

@@ -1,4 +1,4 @@
-defmodule Utils.Random do
+defmodule CucumberExpressions.Utils.Random do
   @moduledoc """
   Generate random id with a risk of repeat as being about the same as
   that of you being hit by a meteorite.

@@ -1,5 +1,6 @@
 defmodule ExCucumber.CucumberExpression.Meta do
   @moduledoc false
+  alias CucumberExpressions.Utils
 
   defstruct id: :abcdef,
             id_str: "",

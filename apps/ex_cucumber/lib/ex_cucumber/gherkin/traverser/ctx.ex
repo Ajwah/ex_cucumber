@@ -1,7 +1,13 @@
 defmodule ExCucumber.Gherkin.Traverser.Ctx do
   @moduledoc false
-  alias ExCucumber.Config
-  alias CucumberExpressions.ParameterType
+  alias CucumberExpressions.{
+    ParameterType,
+    Utils,
+  }
+  
+  alias ExCucumber.{
+    Config,
+  }
 
   defstruct location: %{},
             parameter_type: %{},

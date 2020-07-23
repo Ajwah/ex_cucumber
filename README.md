@@ -14,7 +14,7 @@ consult the documentation on the official website:
   * https://cucumber.io/blog/open-source/announcing-cucumber-expressions/
   * https://cucumber.io/docs/cucumber/cucumber-expressions
 
-In addition to the above, the [git log]() of this repo aptly summarizes
+In addition to the above, the [git log](https://github.com/Ajwah/ex_cucumber/commits/master) of this repo aptly summarizes
 how these various tools work in tandem with each other.
 
 ## Basic Usage
@@ -157,7 +157,7 @@ end
 ```
 
 ### Verbage Styles Pros/Cons
-This has been discussed at length in [following commit message]()
+This has been discussed at length in [following commit message](https://github.com/Ajwah/ex_cucumber/commit/940579aa5f73539128773a062c8596ce15cb1838)
 Your feedback would be highly appreciated.
 
 ### Configuration
@@ -193,7 +193,7 @@ config :ex_gherkin,
   },
   homonyms: ["Агар ", "* ", "अनी ", "Tha ", "Þá ", "Ða ", "Þa "],
 
-  # This is only beneficial for development purposes
+  # This is only beneficial for development purposes and can be skipped
   debug: %{
     tokenizer: false,
     prepare: false,
@@ -220,6 +220,23 @@ end
 
 ## Docs
 The docs can be found at [https://hexdocs.pm/ex_cucumber](https://hexdocs.pm/ex_cucumber).
+
+## Shoulders Of Giants
+For a long time I have been using [white-bread](https://github.com/meadsteve/white-bread) to satisfy my diet of `Cucumber`.
+Regretfully, development [seems to have halted](https://github.com/meadsteve/white-bread/issues/88#issuecomment-547807754) whereas a variety of essential features are missing:
+  * No multi-language support
+  * No support for `But`
+  * No support for `Background`
+  * No support for `Scenario Outline`
+  * No support for `Rule`
+
+Regardless, it was one of the first packages that allowed developers to incorporate `BDD` into their development and I
+am very grateful for that. I hope for this package to be able to carry the banner forward and be a source of
+developer happiness to others like @meadsteve's package was to me for a number of years.
+
+In addition to that, [cabbage](https://github.com/cabbage-ex/cabbage) is also worthy of consideration. Regretfully, it
+too suffers from what I enumerated above.
+
 
 
 

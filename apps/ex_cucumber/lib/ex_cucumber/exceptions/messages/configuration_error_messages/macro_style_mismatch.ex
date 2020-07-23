@@ -1,11 +1,16 @@
 defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
   @moduledoc false
-  alias ExCucumber.Config
-  alias ExCucumber.Exceptions.ConfigurationError
+  alias CucumberExpressions.ParameterType
+
+  alias ExCucumber.{
+    Config,
+    Exceptions.ConfigurationError,
+    Gherkin.Traverser.Ctx,
+    Utils,
+  }
+
   alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
   alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
-  alias ExCucumber.Gherkin.Traverser.Ctx
-  alias CucumberExpressions.ParameterType
 
   def render(%ConfigurationError{error_code: :macro_style_mismatch} = e, :brief) do
     """

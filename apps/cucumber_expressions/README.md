@@ -92,6 +92,12 @@ exception. Otherwise, we retrieve the `principal_id` and the `cucumber`
 There is slightly more involved when there are `params` involved, but
 this is the essence.
 
+In contrast to [ExGherkin](https://github.com/Ajwah/ex-gherkin), I have
+opted not to write a `yecc` `parser` for this. I love the grammar
+reference that can serve as documentation and that others can consult;
+however `Cucumber Expressions` are simple enough that such documentation
+does not provide much value.
+
 This implementation was more motivated by curiosity and to serve as a
 learning opportunity in an attempt to provide a more elegant solution
 than the alternative solution explained below.

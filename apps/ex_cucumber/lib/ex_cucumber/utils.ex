@@ -1,31 +1,5 @@
-defmodule Utils do
-  @moduledoc """
-  Utils standardized cross app
-  """
-  alias Utils.{
-    Descriptor,
-    Random
-  }
-
-  defdelegate id, to: Random
-  defdelegate id(a), to: Random
-  defdelegate length, to: Random
-  defdelegate descriptor(tag, key), to: Descriptor, as: :get
-
-  def strip_leading_space(word, _n \\ 1) do
-    word
-    |> case do
-      <<" ", remainder::binary>> -> remainder
-      w -> w
-    end
-  end
-
-  def strip_cwd(file_path, project_root) when is_binary(file_path) do
-    file_path
-    |> String.replace(project_root, "")
-    |> String.trim_leading("/")
-  end
-
+defmodule ExCucumber.Utils do
+  @moduledoc false
   def smart_quotes(s), do: "“#{s}”"
 
   def bullitize(ls, mode \\ :as_atoms, padding \\ "  ") do

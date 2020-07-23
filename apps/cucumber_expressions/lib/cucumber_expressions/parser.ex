@@ -3,7 +3,7 @@ defmodule CucumberExpressions.Parser do
   """
 
   import Record
-  alias Utils
+  alias CucumberExpressions.Utils
 
   defrecord :parser,
     remaining_sentence: "",

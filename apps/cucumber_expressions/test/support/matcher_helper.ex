@@ -4,7 +4,8 @@ defmodule Support.MatcherHelper do
   alias CucumberExpressions.{
     Matcher,
     ParameterType,
-    Parser
+    Parser,
+    Utils
   }
 
   defmodule T do
@@ -38,7 +39,7 @@ defmodule Support.MatcherHelper do
         |> dd(:result)
 
       t4 = :os.system_time(:millisecond)
-      [parse_tree: t2 - t1, cucumber_expression_parse: t3 - t2, matcher: t4 - t3] |> dd(:timing)
+      _ = [parse_tree: t2 - t1, cucumber_expression_parse: t3 - t2, matcher: t4 - t3] |> dd(:timing)
 
       if scenario do
         assert result.end in cucumber_expressions,

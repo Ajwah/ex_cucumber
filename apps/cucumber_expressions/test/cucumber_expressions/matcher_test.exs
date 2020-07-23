@@ -2,13 +2,14 @@ defmodule CucumberExpressions.MatcherTest do
   @moduledoc false
   use ExUnit.Case
 
-  @fixed_id Utils.id(:fixed)
-
   alias CucumberExpressions.{
     Matcher,
     ParameterType,
-    Parser
+    Parser,
+    Utils,
   }
+
+  @fixed_id Utils.id(:fixed)
 
   alias CucumberExpressions.Matcher.Failure, as: MatchFailure
   alias Support.MatcherHelper

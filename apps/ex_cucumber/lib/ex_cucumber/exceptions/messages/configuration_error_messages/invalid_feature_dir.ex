@@ -9,7 +9,8 @@ defmodule ExCucumber.Exceptions.Messages.InvalidFeatureDir do
     """
   end
 
-  def render(%ConfigurationError{error_code: :invalid_feature_dir}, :verbose) do
+  def render(%ConfigurationError{error_code: :invalid_feature_dir} = e, :verbose) do
+    IO.inspect(e.ctx)
     """
     # Invalid Value For Feature Directory Specified
     ## Summary

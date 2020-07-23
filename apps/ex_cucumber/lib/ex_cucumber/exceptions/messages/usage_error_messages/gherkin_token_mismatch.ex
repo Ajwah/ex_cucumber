@@ -1,10 +1,14 @@
 defmodule ExCucumber.Exceptions.Messages.GherkinTokenMismatch do
   @moduledoc false
-  alias ExCucumber.Config
-  alias ExCucumber.Exceptions.UsageError
+  alias ExCucumber.{
+    Config,
+    Exceptions.UsageError,
+    DocumentationResources,
+    Utils,
+  }
+
   alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
   alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
-  alias ExCucumber.DocumentationResources
 
   def render(%UsageError{error_code: :gherkin_token_mismatch} = e, :brief) do
     """

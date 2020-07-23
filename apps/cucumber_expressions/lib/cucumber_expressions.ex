@@ -1,12 +1,18 @@
 defmodule CucumberExpressions do
   @moduledoc """
-  Kindly consult documentation for CucumberExpressions:
-    * https://cucumber.io/docs/cucumber/cucumber-expressions/
-    * https://cucumber.io/blog/open-source/announcing-cucumber-expressions/
+  This is mainly published for other packages within the cucumber eco-system
+  to take benefit from; which are currently not that many. As such, the
+  usage of this library is not being expanded upon for the time being.
+
+  For general understanding as what Cucumber Expressions are and how
+  you can use them within the context of [ExCucumber](); kindly consult
+  the README.
   """
 
-  alias __MODULE__.Parser
-  alias Utils
+  alias __MODULE__.{
+    Parser,
+    Utils
+  }
 
   def parse(sentence, collected_sentences, id \\ Utils.id(:fixed))
 

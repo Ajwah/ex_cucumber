@@ -4,7 +4,8 @@ defmodule CucumberExpressions.Matcher do
   alias CucumberExpressions.{
     ParameterType,
     Parser,
-    Parser.ParseTree
+    Parser.ParseTree,
+    Utils,
   }
 
   alias __MODULE__.{

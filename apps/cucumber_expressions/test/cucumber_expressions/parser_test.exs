@@ -4,7 +4,8 @@ defmodule CucumberExpressions.ParserTest do
 
   alias CucumberExpressions.{
     Parser,
-    Parser.SyntaxError
+    Parser.SyntaxError,
+    Utils,
   }
 
   import TestHelper
