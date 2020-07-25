@@ -8,7 +8,6 @@ defmodule ExCucumber.MixProject do
   def project do
     [
       app: :ex_cucumber,
-
       version: @vsn,
       description: "Parse and match Cucumber Expressions",
       package: %{
@@ -21,7 +20,6 @@ defmodule ExCucumber.MixProject do
         extras: ["README.md"]
       ],
       aliases: [docs: &build_docs/1],
-
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -46,8 +44,8 @@ defmodule ExCucumber.MixProject do
   defp deps do
     [
       {:cucumber_expressions, in_umbrella: true},
-      #{:cucumber_expressions, "~> 0.1.0"},
-      #{:ex_debugger, "0.1.3"},
+      # {:cucumber_expressions, "~> 0.1.0"},
+      # {:ex_debugger, "0.1.3"},
       {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger", override: true},
       {:ex_gherkin, "0.1.2"}
     ]

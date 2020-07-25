@@ -7,8 +7,11 @@ defmodule ExCucumber.Exceptions.Messages do
     ## Details
   """
 
+  use ExDebugger.Manual
+
   alias __MODULE__.{
     BestPracticesIncomplete,
+    ErrorRaised,
     GherkinTokenMismatch,
     IncorrectErrorLevelDetail,
     IncorrectMacroStyle,
@@ -22,7 +25,19 @@ defmodule ExCucumber.Exceptions.Messages do
     FeatureFileNotFound
   }
 
-  use ExDebugger.Manual
+  alias ExCucumber.Exceptions.{
+    ConfigurationError,
+    MatchFailure,
+    StepError,
+    UsageError
+  }
+
+  @cucumber_related_error_types [
+    ConfigurationError,
+    MatchFailure,
+    StepError,
+    UsageError
+  ]
 
   @default_options [
     enabled: true,
@@ -40,8 +55,10 @@ defmodule ExCucumber.Exceptions.Messages do
 
   @matcher_failure_heading "** (CucumberExpressions.Matcher.Failure)"
   @configuration_error_heading "** (ExCucumber.Exceptions.ConfigurationError)"
+  @step_error_heading "** (ExCucumber.Exceptions.StepError)"
 
   @delegation_mappings %{
+    error_raised: {ErrorRaised, @step_error_heading},
     best_practices_incomplete: {BestPracticesIncomplete, @configuration_error_heading},
     unable_to_match: {UnableToMatch, @matcher_failure_heading},
     unable_to_match_param: {UnableToMatchParam, @matcher_failure_heading},
@@ -57,6 +74,7 @@ defmodule ExCucumber.Exceptions.Messages do
   }
 
   def render(f, exit? \\ true)
+
   def render(f, exit?) when is_atom(exit?) do
     error_detail_level = ExCucumber.Config.error_detail_level()
     dd(:render)
@@ -76,16 +94,17 @@ defmodule ExCucumber.Exceptions.Messages do
     end
   end
 
-  def render(%CompileError{} = f, detail_level: detail_level) do
-    raise f
-  end
-
-  def render(%_{error_code: error_code} = f, detail_level: detail_level) do
+  def render(%error_type{error_code: error_code} = f, detail_level: detail_level) do
     {module, heading} = Map.fetch!(@delegation_mappings, error_code)
 
-    {
-      heading,
-      module.render(f, detail_level)
-    }
+    cond do
+      error_type in @cucumber_related_error_types -> {heading, module.render(f, detail_level)}
+      true -> raise f
+    end
+  end
+
+  def render(f, _) do
+    IO.inspect(f, label: :f)
+    raise f
   end
 end

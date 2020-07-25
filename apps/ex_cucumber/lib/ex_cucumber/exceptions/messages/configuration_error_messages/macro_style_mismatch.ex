@@ -6,7 +6,7 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
     Config,
     Exceptions.ConfigurationError,
     Gherkin.Traverser.Ctx,
-    Utils,
+    Utils
   }
 
   alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
@@ -59,7 +59,7 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
     `ExCucumber` allows you to configure how you would prefer to express yourself.
     In the case that you like to employ the following macro styles:
 
-    #{example_phrases(:macro_names)}
+    #{example_phrases(:def_based_gwt_macros)}
 
     Then you need to set the following config option:
     #{
@@ -72,7 +72,7 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
 
     In the case that you like to employ the following macro styles:
 
-    #{example_phrases(:modularized_macro_names)}
+    #{example_phrases(:module_based_gwt_macros)}
 
     Then you need to set the following config option:
     #{

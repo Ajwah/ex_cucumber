@@ -22,19 +22,23 @@ defmodule ExCucumber.Exceptions.Messages.Common do
     do: render(:module_file, ctx.module_file, ctx.location.line, ctx.location.column)
 
   # ARITY 3
+  def render(:macro_usage_heading, %Ctx{} = ctx, cucumber_expression) do
+    if macro_style = ctx.extra[:macro_style] do
+      """
+      #{GherkinKeywords.macro_name(ctx, macro_style)} "#{cucumber_expression}", arg do
+      """
+    else
+      """
+      #{GherkinKeywords.macro_name(ctx)} "#{cucumber_expression}", arg do
+      """
+    end
+  end
+
   def render(:macro_usage, %Ctx{} = ctx, cucumber_expression) do
-    r =
-      if macro_style = ctx.extra[:macro_style] do
-        """
-        #{GherkinKeywords.macro_name(ctx, macro_style)} "#{cucumber_expression}", arg do
-        end
-        """
-      else
-        """
-        #{GherkinKeywords.macro_name(ctx)} "#{cucumber_expression}", arg do
-        end
-        """
-      end
+    r = """
+    #{render(:macro_usage_heading, ctx, cucumber_expression)}
+    end
+    """
 
     render(:code_block, r)
   end

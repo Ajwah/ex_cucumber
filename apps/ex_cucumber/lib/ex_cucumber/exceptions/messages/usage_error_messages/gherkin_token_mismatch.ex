@@ -4,7 +4,7 @@ defmodule ExCucumber.Exceptions.Messages.GherkinTokenMismatch do
     Config,
     Exceptions.UsageError,
     DocumentationResources,
-    Utils,
+    Utils
   }
 
   alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords

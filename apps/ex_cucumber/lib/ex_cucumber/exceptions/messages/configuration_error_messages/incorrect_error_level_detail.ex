@@ -3,7 +3,7 @@ defmodule ExCucumber.Exceptions.Messages.IncorrectErrorLevelDetail do
   alias ExCucumber.{
     Config,
     Exceptions.ConfigurationError,
-    Utils,
+    Utils
   }
 
   def render(%ConfigurationError{error_code: :incorrect_error_level_detail}, :brief) do

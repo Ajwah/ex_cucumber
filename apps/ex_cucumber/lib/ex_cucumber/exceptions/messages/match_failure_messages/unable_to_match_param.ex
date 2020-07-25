@@ -4,8 +4,9 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
 
   alias ExCucumber.{
     Exceptions.MatchFailure,
-    Utils,
+    Utils
   }
+
   alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
 
   def render(%MatchFailure{error_code: :unable_to_match_param} = f, :brief) do

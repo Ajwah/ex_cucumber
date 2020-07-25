@@ -1,19 +1,31 @@
 defmodule ExCucumber.Gherkin.Keywords do
   @moduledoc false
   @external_resource "config/config.exs"
-  
+
   alias ExCucumber.Gherkin.Traverser.Ctx
   alias ExCucumber.Config
 
   @mappings %{
-    macro_names: %{
+    context_macros: %{
+      regular: [
+        :background,
+        :scenario,
+        :rule
+      ],
+      module_based: [
+        __MODULE__.Background,
+        __MODULE__.Scenario,
+        __MODULE__.Rule
+      ]
+    },
+    def_based_gwt_macros: %{
       given: :defgiven,
       when: :defwhen,
       and: :defand,
       but: :defbut,
       then: :defthen
     },
-    modularized_macro_names: %{
+    module_based_gwt_macros: %{
       given: __MODULE__.Given,
       when: __MODULE__.When,
       and: __MODULE__.And,
@@ -28,23 +40,13 @@ defmodule ExCucumber.Gherkin.Keywords do
       but: "not me"
     ]
   }
-
-  def extract(<<"given", _::binary>>), do: :given
-  def extract(<<"when", _::binary>>), do: :when
-  def extract(<<"and", _::binary>>), do: :and
-  def extract(<<"but", _::binary>>), do: :but
-  def extract(<<"then", _::binary>>), do: :then
-
-  def extract(s),
-    do: raise("Developer Error: This is impossible. Unable to extract Gherkin Keyword from: #{s}")
-
   def macro_style?(macro_style), do: Config.macro_style() == macro_style
 
   def section do
     Config.macro_style()
     |> case do
-      :def -> :macro_names
-      :module -> :modularized_macro_names
+      :def -> :def_based_gwt_macros
+      :module -> :module_based_gwt_macros
     end
   end
 
@@ -78,8 +80,8 @@ defmodule ExCucumber.Gherkin.Keywords do
 
     section
     |> case do
-      :macro_names -> name_so_far
-      :modularized_macro_names -> "#{name_so_far}._"
+      :def_based_gwt_macros -> name_so_far
+      :module_based_gwt_macros -> "#{name_so_far}._"
     end
   end
 
@@ -87,14 +89,40 @@ defmodule ExCucumber.Gherkin.Keywords do
 
   defmacro __after_compile__(_, _) do
     quote do
-      :modularized_macro_names
+      :context_macros
+      |> ExCucumber.Gherkin.Keywords.mappings()
+      |> Map.fetch!(:module_based)
+      |> Enum.each(fn module_name ->
+        ast =
+          quote do
+            defmacro _(do: block) do
+              ExCucumber.define_context_macro(
+                __CALLER__,
+                :no_title,
+                nil,
+                block
+              )
+            end
+
+            defmacro _(title, do: block) do
+              ExCucumber.define_context_macro(
+                __CALLER__,
+                title,
+                nil,
+                block
+              )
+            end
+          end
+
+        Module.create(module_name, ast, Macro.Env.location(__ENV__))
+      end)
+
+      :module_based_gwt_macros
       |> ExCucumber.Gherkin.Keywords.mappings()
       |> Enum.each(fn {gherkin_keyword, module_name} ->
         ast =
           if ExCucumber.Gherkin.Keywords.macro_style?(:module) do
             quote do
-              def a, do: 1
-
               defmacro _(cucumber_expression, arg, do: block) do
                 ExCucumber.define_gherkin_keyword_macro(
                   __CALLER__,

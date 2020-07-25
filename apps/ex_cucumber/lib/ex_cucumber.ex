@@ -16,6 +16,9 @@ defmodule ExCucumber do
       require ExCucumber.Gherkin.Keywords.And
       require ExCucumber.Gherkin.Keywords.But
       require ExCucumber.Gherkin.Keywords.Then
+      require ExCucumber.Gherkin.Keywords.Background
+      require ExCucumber.Gherkin.Keywords.Scenario
+      require ExCucumber.Gherkin.Keywords.Rule
 
       alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
 
@@ -24,7 +27,10 @@ defmodule ExCucumber do
         When,
         And,
         But,
-        Then
+        Then,
+        Background,
+        Scenario,
+        Rule
       }
 
       import unquote(__MODULE__)
@@ -75,7 +81,20 @@ defmodule ExCucumber do
             :gherkin_token_mismatch
           )
         else
-          {apply(__MODULE__, ctx.extra.fun, arg), def_meta}
+          try do
+            result = apply(__MODULE__, ctx.extra.fun, arg)
+            IO.write("#{IO.ANSI.green()}.#{IO.ANSI.reset()}")
+            {result, def_meta}
+          rescue
+            e in [ExUnit.AssertionError] ->
+              ExCucumber.Exceptions.StepError.raise(
+                Ctx.extra(ctx, %{
+                  def_meta: def_meta,
+                  raised_error: e
+                }),
+                :error_raised
+              )
+          end
         end
       end
     end
@@ -96,7 +115,30 @@ defmodule ExCucumber do
     end
   end
 
-  :macro_names
+  :context_macros
+  |> ExCucumber.Gherkin.Keywords.mappings()
+  |> Map.fetch!(:regular)
+  |> Enum.each(fn macro_name ->
+    defmacro unquote(macro_name)(do: block) do
+      ExCucumber.define_context_macro(
+        __CALLER__,
+        :no_title,
+        nil,
+        block
+      )
+    end
+
+    defmacro unquote(macro_name)(title, do: block) do
+      ExCucumber.define_context_macro(
+        __CALLER__,
+        title,
+        nil,
+        block
+      )
+    end
+  end)
+
+  :def_based_gwt_macros
   |> ExCucumber.Gherkin.Keywords.mappings()
   |> Enum.each(fn {gherkin_keyword, macro_name} ->
     if ExCucumber.Gherkin.Keywords.macro_style?(:def) do
@@ -138,6 +180,27 @@ defmodule ExCucumber do
     end
   end)
 
+  def define_context_macro(
+        caller = %Macro.Env{},
+        _title,
+        arg,
+        block
+      ) do
+    _line = caller.line
+    has_arg? = arg != nil
+
+    ast =
+      if has_arg? do
+        raise "Not implemented yet."
+      else
+        quote do
+          unquote(block)
+        end
+      end
+
+    ast
+  end
+
   def define_gherkin_keyword_macro(
         caller = %Macro.Env{},
         gherkin_keyword,
@@ -167,6 +230,7 @@ defmodule ExCucumber do
             ] do
         @cucumber_expressions cucumber_expression
         @meta Map.put(@meta, func, meta)
+        @meta Map.put(@meta, cucumber_expression.formulation, func)
       end
 
     def_ast =
