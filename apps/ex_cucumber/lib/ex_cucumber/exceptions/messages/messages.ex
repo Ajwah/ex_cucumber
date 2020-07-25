@@ -56,7 +56,8 @@ defmodule ExCucumber.Exceptions.Messages do
     feature_file_not_found: {FeatureFileNotFound, @configuration_error_heading}
   }
 
-  def render(f) do
+  def render(f, exit? \\ true)
+  def render(f, exit?) when is_atom(exit?) do
     error_detail_level = ExCucumber.Config.error_detail_level()
     dd(:render)
 
@@ -65,7 +66,7 @@ defmodule ExCucumber.Exceptions.Messages do
       IO.ANSI.Docs.print_heading(heading, @default_options)
       IO.ANSI.Docs.print(body, @default_options)
 
-      exit(:shutdown)
+      if exit?, do: exit(:shutdown)
     else
       {_, body} = render(f, detail_level: :brief)
 
@@ -73,6 +74,10 @@ defmodule ExCucumber.Exceptions.Messages do
       #{body}
       """
     end
+  end
+
+  def render(%CompileError{} = f, detail_level: detail_level) do
+    raise f
   end
 
   def render(%_{error_code: error_code} = f, detail_level: detail_level) do

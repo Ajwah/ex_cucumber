@@ -38,14 +38,6 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatch do
     }`
     * Module: `#{module_name}`
     * Cause: Missing `cucumber expression` for: #{Utils.smart_quotes(f.ctx.sentence)}
-    * extra: #{inspect(f.extra, pretty: true)}
     """
-
-    # * Gherkin Keyword: #{f.ctx.keyword}
-    # * Gherkin Keyword Token: #{f.ctx.token}
-    # * Macro: #{f.ctx.inferred.macro}
-    # * Location Feature File:
-    #   - Line: #{f.ctx.location.line}
-    #   - Column: #{f.ctx.location.column}
   end
 end

@@ -1,5 +1,7 @@
 defmodule ExCucumber.Config do
   @moduledoc false
+  @external_resource "config/config.exs"
+
   @macro_styles [:def, :module]
   @error_detail_levels [:brief, :verbose]
   @all_best_practices %{

@@ -2,6 +2,7 @@ defmodule ExCucumber do
   @moduledoc """
   Documentation for ExCucumber.
   """
+  @external_resource "config/config.exs"
 
   alias CucumberExpressions.ParameterType
   use ExDebugger.Manual

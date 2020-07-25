@@ -216,7 +216,7 @@ defmodule CucumberExpressions.Matcher do
             parse_tree.params[param_key]
             |> Map.put(:params, [{param_key, match} | params])
 
-          q ->
+          _ ->
             parse_tree.params[param_key]
             |> Map.put(:params, [{param_key, Utils.strip_leading_space(current_word)} | params])
         end
@@ -240,7 +240,7 @@ defmodule CucumberExpressions.Matcher do
          next_keys,
          rest,
          parameter_types,
-         m = matcher(current_word: current_word, ctx: ctx),
+         m = matcher(ctx: ctx),
          parse_tree
        ) do
     next_keys
@@ -325,7 +325,7 @@ defmodule CucumberExpressions.Matcher do
           parameter_types
         )
         |> case do
-          {:error, operation, error} ->
+          {:error, _, _} ->
             Failure.raise(
               ctx,
               %{param_key: current_key, value: to_be_matched},
@@ -342,8 +342,7 @@ defmodule CucumberExpressions.Matcher do
 
   defp potential_param_to_value_match(
          potential_match,
-         m =
-           matcher(current_word: current_word, params: params, parameter_types: parameter_types),
+         m = matcher(),
          parse_tree
        ) do
     potential_match

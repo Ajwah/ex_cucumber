@@ -42,7 +42,6 @@ defmodule CucumberExpressions.Matcher.Submatcher do
              potential_submatches: potential_submatches,
              previous_subsentence: previous_subsentence,
              current_word: current_word,
-             parameter_types: parameter_types,
              only_spaces_so_far?: false
            ),
          remainder_sentence = <<" ", rest::binary>>
@@ -84,7 +83,7 @@ defmodule CucumberExpressions.Matcher.Submatcher do
   end
 
   defp retrieve(
-         s =
+#         s =
            submatcher(
              potential_submatches: potential_submatches,
              previous_subsentence: previous_subsentence,

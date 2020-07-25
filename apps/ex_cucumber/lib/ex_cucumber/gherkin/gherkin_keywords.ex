@@ -1,6 +1,7 @@
 defmodule ExCucumber.Gherkin.Keywords do
   @moduledoc false
-
+  @external_resource "config/config.exs"
+  
   alias ExCucumber.Gherkin.Traverser.Ctx
   alias ExCucumber.Config
 
