@@ -5,7 +5,7 @@ defmodule CucumberExpressions.Matcher do
     ParameterType,
     Parser,
     Parser.ParseTree,
-    Utils,
+    Utils
   }
 
   alias __MODULE__.{
@@ -20,6 +20,7 @@ defmodule CucumberExpressions.Matcher do
 
   def run(sentence, %Parser{} = p, %ParameterType{} = pt, ctx \\ %{}) when is_binary(sentence) do
     setting_this_to_true_handles_preceding_spaces = true
+    dd(p, :check_parser_content)
 
     [
       current_word: "",

@@ -83,12 +83,12 @@ defmodule CucumberExpressions.Matcher.Submatcher do
   end
 
   defp retrieve(
-#         s =
-           submatcher(
-             potential_submatches: potential_submatches,
-             previous_subsentence: previous_subsentence,
-             current_word: current_word
-           ),
+         #         s =
+         submatcher(
+           potential_submatches: potential_submatches,
+           previous_subsentence: previous_subsentence,
+           current_word: current_word
+         ),
          ""
        ) do
     potential_submatches

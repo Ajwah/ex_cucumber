@@ -13,6 +13,7 @@ defmodule CucumberExpressions.Parser do
     "escaped_{?": false,
     "escaped_(?": false,
     only_spaces_so_far?: false,
+    single_word_so_far?: true,
     multiple_ids_allowed?: true,
     id: ""
 
@@ -27,6 +28,7 @@ defmodule CucumberExpressions.Parser do
             "escaped_{?": boolean,
             "escaped_(?": boolean,
             only_spaces_so_far?: boolean,
+            single_word_so_far?: boolean,
             multiple_ids_allowed?: true,
             id: Utils.Random.t()
           )
@@ -119,14 +121,20 @@ defmodule CucumberExpressions.Parser do
              collected_sentences: collected_sentences,
              "escaped_{?": escaped_curly_bracket?,
              "escaped_(?": escaped_round_bracket?,
-             only_spaces_so_far?: only_spaces_so_far?
+             only_spaces_so_far?: only_spaces_so_far?,
+             single_word_so_far?: single_word_so_far?
            ),
          <<remaining_sentence::binary>>
        ) do
     remaining_sentence
     |> case do
       "" ->
-        format_ending(p)
+        if single_word_so_far? do
+          ending = Map.fetch!(format_ending(p), current_word)
+          Map.update(collected_sentences, current_word, ending, fn e -> Map.merge(e, ending) end)
+        else
+          format_ending(p)
+        end
 
       <<"\\ ", rest::binary>> ->
         p
@@ -140,7 +148,7 @@ defmodule CucumberExpressions.Parser do
       <<" ", rest::binary>> ->
         if only_spaces_so_far? do
           p
-          |> parser(current_word: current_word <> " ")
+          |> parser(current_word: current_word <> " ", single_word_so_far?: false)
           # |> parser(remaining_sentence: rest, current_word: current_word <> " ")
           |> process(rest)
         else
@@ -152,8 +160,10 @@ defmodule CucumberExpressions.Parser do
           else
             subset = Map.get(collected_sentences, current_word, %{})
 
-            p = parser(p, current_word: " ", collected_sentences: subset)
+            p =
+              parser(p, current_word: " ", collected_sentences: subset, single_word_so_far?: false)
 
+            # Map.update(collected_sentences, current_word, ending, fn e -> Map.merge(e, ending) end)
             Map.merge(collected_sentences, %{current_word => Map.merge(subset, process(p, rest))})
           end
         end

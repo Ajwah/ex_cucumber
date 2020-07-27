@@ -2,7 +2,8 @@ defmodule ExCucumber.CucumberExpression do
   @moduledoc false
 
   defstruct formulation: "",
-            meta: nil
+            meta: nil,
+            length: 0
 
   alias __MODULE__.Meta
 
@@ -11,7 +12,8 @@ defmodule ExCucumber.CucumberExpression do
 
     struct!(__MODULE__, %{
       formulation: expression,
-      meta: meta
+      meta: meta,
+      length: String.length(expression)
     })
   end
 
@@ -21,13 +23,15 @@ defmodule ExCucumber.CucumberExpression do
     do:
       CucumberExpressions.parse(cucumber_expression.formulation, %{}, cucumber_expression.meta.id)
 
-  def parse([hd | tl]) do
-    parse_tree_so_far =
-      tl
-      |> Enum.reduce(%{}, fn e = %__MODULE__{}, a ->
-        CucumberExpressions.parse(e.formulation, a, e.meta.id).result
-      end)
-
-    CucumberExpressions.parse(hd.formulation, parse_tree_so_far, hd.meta.id)
+  def parse(ls) do
+    ls
+    # This sorting is introduced on account of the limitation as documented under: test "Subsentence ascending ordering matters" do
+    |> Enum.sort(fn a = %__MODULE__{}, b = %__MODULE__{} ->
+      a.length <= b.length
+    end)
+    |> Enum.reduce(%{}, fn e = %__MODULE__{}, a ->
+      CucumberExpressions.parse(e.formulation, a, e.meta.id).result
+    end)
+    |> CucumberExpressions.Parser.result()
   end
 end

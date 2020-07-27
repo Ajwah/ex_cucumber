@@ -94,6 +94,9 @@ defmodule ExCucumber do
                 }),
                 :error_raised
               )
+
+            e ->
+              reraise e, __STACKTRACE__
           end
         end
       end

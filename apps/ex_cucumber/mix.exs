@@ -47,7 +47,8 @@ defmodule ExCucumber.MixProject do
       # {:cucumber_expressions, "~> 0.1.0"},
       # {:ex_debugger, "0.1.3"},
       {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger", override: true},
-      {:ex_gherkin, "0.1.2"}
+      {:ex_gherkin, path: "/Users/kevinjohnson/projects/ex_gherkin", override: true}
+      # {:ex_gherkin, "0.1.2"}
     ]
   end
 

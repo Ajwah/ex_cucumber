@@ -5,7 +5,7 @@ defmodule CucumberExpressions.ParserTest do
   alias CucumberExpressions.{
     Parser,
     Parser.SyntaxError,
-    Utils,
+    Utils
   }
 
   import TestHelper
@@ -41,8 +41,9 @@ defmodule CucumberExpressions.ParserTest do
       assert Parser.parser(p, :"escaped_{?") == false
       assert Parser.parser(p, :"escaped_(?") == false
       assert Parser.parser(p, :only_spaces_so_far?) == false
+      assert Parser.parser(p, :single_word_so_far?) == true
 
-      assert {:parser, "a", "b", "c", %{}, false, false, false, true, Utils.id(:fixed)} == p
+      assert {:parser, "a", "b", "c", %{}, false, false, false, true, true, Utils.id(:fixed)} == p
     end
 
     test "sets vals" do
@@ -56,8 +57,10 @@ defmodule CucumberExpressions.ParserTest do
       assert Parser.parser(p, :"escaped_{?") == true
       assert Parser.parser(p, :"escaped_(?") == false
       assert Parser.parser(p, :only_spaces_so_far?) == true
+      assert Parser.parser(p, :single_word_so_far?) == true
 
-      assert {:parser, "a", "b", "c", %{a: 1}, true, false, true, false, Utils.id(:fixed)} == p
+      assert {:parser, "a", "b", "c", %{a: 1}, true, false, true, true, false, Utils.id(:fixed)} ==
+               p
     end
   end
 
@@ -65,6 +68,11 @@ defmodule CucumberExpressions.ParserTest do
     test "null case" do
       full_sentence = ""
       assert Parser.run(full_sentence, %{}) == format_ending(full_sentence)
+    end
+
+    test "Singular case" do
+      full_sentence = "a"
+      assert Parser.run(full_sentence, %{}) == format_ending("a", full_sentence)
     end
 
     test "Converts sentence to nested map of words" do
@@ -126,6 +134,88 @@ defmodule CucumberExpressions.ParserTest do
       result = Parser.run(another_full_sentence, result)
 
       assert expected == result
+    end
+
+    # This pertains to an intricate bug where `collected_sentences` a sentence consisting of
+    # a single word would erase previous values. This is because in all the other case branches
+    # for process, we are recursively adding new values inside `collected_sentences` whereas in
+    # this case, the single word will directly go to the ending case, which is only `format_empty`
+    test "Single word after multiple sentences does not cause previous sentences to get lost" do
+      full_sentence = "its synonym is: Invalid Bleeding"
+      another_full_sentence = "the following minima and maxima apply:"
+      single_word_sentence = "Istihaadhah"
+
+      expected = %{
+        "Istihaadhah" => Map.fetch!(format_ending(single_word_sentence), ""),
+        "its" => %{
+          " synonym" => %{
+            " is:" => %{
+              " Invalid" => format_ending(" Bleeding", full_sentence)
+            }
+          }
+        },
+        "the" => %{
+          " following" => %{
+            " minima" => %{
+              " and" => %{
+                " maxima" => format_ending(" apply:", another_full_sentence)
+              }
+            }
+          }
+        }
+      }
+
+      result = %{}
+      result = Parser.run(another_full_sentence, result)
+      result = Parser.run(full_sentence, result)
+      result = Parser.run(single_word_sentence, result)
+
+      assert expected == result
+    end
+
+    # TODO: This is an abomination and needs to be fixed.
+    test "Subsentence ascending ordering matters" do
+      some_variant_sentence = "the following minima and maxima apply:"
+      full_sentence = "AAA BBB CCCC DDD"
+      sub_sentence = "AAA BBB"
+
+      result = %{}
+      result = Parser.run(some_variant_sentence, result)
+      result = Parser.run(sub_sentence, result)
+      result = Parser.run(full_sentence, result)
+
+      expected = %{
+        "AAA" => %{
+          " BBB" => %{
+            :end => "AAA BBB",
+            :id => "000000000000000",
+            " CCCC" => %{" DDD" => %{end: "AAA BBB CCCC DDD", id: "000000000000000"}}
+          }
+        },
+        "the" => %{
+          " following" => %{
+            " minima" => %{
+              " and" => %{
+                " maxima" => %{
+                  " apply:" => %{
+                    end: "the following minima and maxima apply:",
+                    id: "000000000000000"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      assert expected == result
+
+      result = %{}
+      result = Parser.run(some_variant_sentence, result)
+      result = Parser.run(full_sentence, result)
+      result = Parser.run(sub_sentence, result)
+
+      refute expected == result
     end
   end
 

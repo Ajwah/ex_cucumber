@@ -6,6 +6,8 @@ defmodule ExCucumber.Gherkin.Traverser.Feature do
 
   alias ExGherkin.AstNdjson.Background
 
+  def run(%ExGherkin.AstNdjson.Feature{children: nil}, acc, _), do: acc
+
   def run(%ExGherkin.AstNdjson.Feature{} = f, acc, parse_tree) do
     {background, children} = background(f.children)
 

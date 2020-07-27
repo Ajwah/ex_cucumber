@@ -127,7 +127,6 @@ defmodule Support.CucumberExpression do
     end)
   end
 
-
   # Modify "X(s) A B(s) C" -> "X/Xs A B/Bs C"
   def optionals_to_alternatives(instance) do
     String.replace(instance, ~r/([a-zA-Z0-9]*)\(s\)/, "\\1\/\\1s")

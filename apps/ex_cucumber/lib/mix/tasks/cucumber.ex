@@ -6,6 +6,20 @@ defmodule Mix.Tasks.Cucumber do
   alias ExCucumber.Report
   alias ExCucumber.Exceptions.Messages
 
+  alias ExCucumber.Exceptions.{
+    ConfigurationError,
+    MatchFailure,
+    StepError,
+    UsageError
+  }
+
+  @cucumber_related_error_types [
+    ConfigurationError,
+    MatchFailure,
+    StepError,
+    UsageError
+  ]
+
   @shortdoc "Run cucumber framework"
   @impl Mix.Task
   def run(opts) do
@@ -27,8 +41,7 @@ defmodule Mix.Tasks.Cucumber do
           Code.compile_file(e)
           Report.record(a, :passed)
         rescue
-          e in [ArgumentError, FunctionClauseError] -> raise e
-          error -> Report.record(a, %{file: e, error: error})
+          error in @cucumber_related_error_types -> Report.record(a, %{file: e, error: error})
         end
       end)
 

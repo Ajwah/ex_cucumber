@@ -102,9 +102,4 @@ defmodule ExCucumber.Exceptions.Messages do
       true -> raise f
     end
   end
-
-  def render(f, _) do
-    IO.inspect(f, label: :f)
-    raise f
-  end
 end

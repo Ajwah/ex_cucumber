@@ -3,8 +3,9 @@ defmodule CucumberExpressions.ParameterType.Disambiguator do
 
   alias CucumberExpressions.{
     ParameterType.SyntaxError,
-    Utils,
+    Utils
   }
+
   use ExDebugger.Manual
 
   defstruct paradigm: [%Regex{}]

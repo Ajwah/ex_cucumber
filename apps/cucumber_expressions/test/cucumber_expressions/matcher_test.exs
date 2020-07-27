@@ -6,7 +6,7 @@ defmodule CucumberExpressions.MatcherTest do
     Matcher,
     ParameterType,
     Parser,
-    Utils,
+    Utils
   }
 
   @fixed_id Utils.id(:fixed)

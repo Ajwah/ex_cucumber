@@ -8,7 +8,6 @@ defmodule CucumberExpressions.MixProject do
   def project do
     [
       app: :cucumber_expressions,
-
       version: @vsn,
       description: "Parse and match Cucumber Expressions",
       package: %{
@@ -21,7 +20,6 @@ defmodule CucumberExpressions.MixProject do
         extras: ["README.md"]
       ],
       aliases: [docs: &build_docs/1],
-
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -45,7 +43,7 @@ defmodule CucumberExpressions.MixProject do
   defp deps() do
     [
       {:ex_debugger, "0.1.3"},
-      {:puid, "~> 1.0"},
+      {:puid, "~> 1.0"}
     ]
   end
 
