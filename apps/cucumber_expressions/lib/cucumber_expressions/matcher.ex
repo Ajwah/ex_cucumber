@@ -110,20 +110,20 @@ defmodule CucumberExpressions.Matcher do
               {:cont, acc}
 
             :parameter_type_not_present ->
-              IO.puts(
-                "Unable to resort to a disambiguator for: #{inspect(param_key)} to resolve: #{
-                  sentence_to_disambiguate
-                }. Continuing on in the hope it can be resolved alternatively."
-              )
+              # IO.puts(
+              #   "Unable to resort to a disambiguator for: #{inspect(param_key)} to resolve: #{
+              #     sentence_to_disambiguate
+              #   }. Continuing on in the hope it can be resolved alternatively."
+              # )
 
               {:cont, acc}
 
             :inoperative_disambiguator ->
-              IO.puts(
-                "Unable to resort to a disambiguator for: #{inspect(param_key)} to resolve: #{
-                  sentence_to_disambiguate
-                }. Continuing on in the hope it can be resolved alternatively."
-              )
+              # IO.puts(
+              #   "Unable to resort to a disambiguator for: #{inspect(param_key)} to resolve: #{
+              #     sentence_to_disambiguate
+              #   }. Continuing on in the hope it can be resolved alternatively."
+              # )
 
               {:cont, acc}
 
@@ -208,10 +208,16 @@ defmodule CucumberExpressions.Matcher do
           |> Map.values()
 
         parameter_types
-        |> ParameterType.run(param_key, current_word)
+        |> ParameterType.run(param_key, Utils.strip_leading_space(current_word), false)
         |> case do
-          {:error, _failed_action, _result} ->
-            raise "This is not working"
+          {:error, stage, msg} ->
+            Failure.raise(
+              ctx,
+              %{param_key: param_key, msg: msg, value: current_word, stage: stage},
+              :unable_to_match_param,
+              m,
+              parse_tree
+            )
 
           {:ok, {_, {match, _}}} ->
             parse_tree.params[param_key]
@@ -326,10 +332,10 @@ defmodule CucumberExpressions.Matcher do
           parameter_types
         )
         |> case do
-          {:error, _, _} ->
+          {:error, stage, error_msg} ->
             Failure.raise(
               ctx,
-              %{param_key: current_key, value: to_be_matched},
+              %{param_key: current_key, value: to_be_matched, stage: stage, msg: error_msg},
               :unable_to_match_param,
               m,
               parse_tree
@@ -373,11 +379,11 @@ defmodule CucumberExpressions.Matcher do
     |> ParameterType.run(current_key, current_word, false)
     |> case do
       :parameter_type_not_present ->
-        IO.puts(
-          "No parameter type defined: current_key: #{inspect(current_key)} current_word: #{
-            inspect(current_word)
-          } so resorted to auto-match instead."
-        )
+        # IO.puts(
+        #   "No parameter type defined: current_key: #{inspect(current_key)} current_word: #{
+        #     inspect(current_word)
+        #   } so resorted to auto-match instead."
+        # )
 
         {:ok, {current_key, current_word}}
 

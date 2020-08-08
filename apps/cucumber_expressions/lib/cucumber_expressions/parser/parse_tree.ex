@@ -64,8 +64,8 @@ defmodule CucumberExpressions.Parser.ParseTree do
   # Accumulates all the cucumber expressions under `:end` key
   def endings(parse_tree, acc \\ []) do
     cond do
-      is_map(parse_tree) and parse_tree[:end] ->
-        [parse_tree[:end] | acc]
+      is_map(parse_tree) and parse_tree[:id] ->
+        [parse_tree.end | acc]
 
       is_map(parse_tree) ->
         endings(Map.values(parse_tree), acc)

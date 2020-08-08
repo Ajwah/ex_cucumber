@@ -107,9 +107,23 @@ defmodule CucumberExpressions.Parser do
   end
 
   def format_ending(
-        parser(current_word: current_word, original_sentence: original_sentence, id: id)
+        parser(
+          current_word: current_word,
+          collected_sentences: collected_sentences,
+          original_sentence: original_sentence,
+          id: id
+        )
       ) do
-    %{current_word => %{:end => original_sentence, id: id}}
+    if collected_sentences[current_word] && collected_sentences[current_word][:id] do
+      %{
+        current_word => %{
+          :end => original_sentence,
+          id: [id | List.wrap(collected_sentences[current_word].id)]
+        }
+      }
+    else
+      %{current_word => %{:end => original_sentence, id: id}}
+    end
   end
 
   defp process(
@@ -236,7 +250,7 @@ defmodule CucumberExpressions.Parser do
         |> process(rest)
 
       <<"{", rest::binary>> ->
-        params = Map.get(collected_sentences, :params, %{next_key: %{p2p: %{}}})
+        params = Map.get(collected_sentences, :params, %{})
 
         p =
           parser(p,
@@ -522,11 +536,7 @@ defmodule CucumberExpressions.Parser do
                   a[e]
                   |> case do
                     nil ->
-                      if is_atom(e) do
-                        Map.put(a, :p2p, Map.put(a.p2p, e, param))
-                      else
-                        Map.put(a, e, param)
-                      end
+                      Map.put(a, e, param)
 
                     # |> dd(:parser)
 

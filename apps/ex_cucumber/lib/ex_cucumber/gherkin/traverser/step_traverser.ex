@@ -31,7 +31,8 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
         params: params,
         doc_string: s.docString,
         data_table: DataTable.to_map(s.dataTable, examples(acc.extra)),
-        history: acc.extra.history
+        step_history: acc.extra.step_history,
+        context_history: acc.extra.context_history
       })
       |> dd(:run)
 
@@ -55,7 +56,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
       end
 
     Ctx.extra(acc, %{
-      history: [event | acc.extra.history],
+      step_history: [event | acc.extra.step_history],
       state: state
     })
   end

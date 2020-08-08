@@ -13,9 +13,9 @@ defmodule ExCucumber.Gherkin.Keywords do
         :rule
       ],
       module_based: [
-        __MODULE__.Background,
-        __MODULE__.Scenario,
-        __MODULE__.Rule
+        background: __MODULE__.Background,
+        scenario: __MODULE__.Scenario,
+        rule: __MODULE__.Rule
       ]
     },
     def_based_gwt_macros: %{
@@ -88,25 +88,31 @@ defmodule ExCucumber.Gherkin.Keywords do
   @after_compile __MODULE__
 
   defmacro __after_compile__(_, _) do
-    quote do
+    quote location: :keep do
       :context_macros
       |> ExCucumber.Gherkin.Keywords.mappings()
       |> Map.fetch!(:module_based)
-      |> Enum.each(fn module_name ->
+      |> Enum.each(fn {macro_ref, module_name} ->
         ast =
-          quote do
+          quote location: :keep do
+            @moduledoc false
+
+            @doc false
             defmacro _(do: block) do
               ExCucumber.define_context_macro(
                 __CALLER__,
+                unquote(macro_ref),
                 :no_title,
                 nil,
                 block
               )
             end
 
+            @doc false
             defmacro _(title, do: block) do
               ExCucumber.define_context_macro(
                 __CALLER__,
+                unquote(macro_ref),
                 title,
                 nil,
                 block
@@ -122,7 +128,10 @@ defmodule ExCucumber.Gherkin.Keywords do
       |> Enum.each(fn {gherkin_keyword, module_name} ->
         ast =
           if ExCucumber.Gherkin.Keywords.macro_style?(:module) do
-            quote do
+            quote location: :keep do
+              @moduledoc false
+
+              @doc false
               defmacro _(cucumber_expression, arg, do: block) do
                 ExCucumber.define_gherkin_keyword_macro(
                   __CALLER__,
@@ -133,6 +142,7 @@ defmodule ExCucumber.Gherkin.Keywords do
                 )
               end
 
+              @doc false
               defmacro _(cucumber_expression, do: block) do
                 ExCucumber.define_gherkin_keyword_macro(
                   __CALLER__,
@@ -144,7 +154,7 @@ defmodule ExCucumber.Gherkin.Keywords do
               end
             end
           else
-            quote do
+            quote location: :keep do
               defmacro _(cucumber_expression, _, _) do
                 ExCucumber.define_gherkin_keyword_mismatch_macro(
                   __CALLER__,

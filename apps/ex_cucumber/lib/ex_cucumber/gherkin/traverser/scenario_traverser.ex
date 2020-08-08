@@ -12,7 +12,7 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
       rows
       |> Enum.each(fn row ->
         s.steps
-        |> Enum.reduce(Ctx.extra(acc, scenario_meta(s, tags, row)), fn
+        |> Enum.reduce(Ctx.extra(acc, scenario_meta(acc.extra.context_history, s, tags, row)), fn
           %ExGherkin.AstNdjson.Step{} = step, a -> MainTraverser.run(step, a, parse_tree)
         end)
       end)
@@ -28,7 +28,8 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
     [{tags, rows}]
   end
 
-  defp scenario_meta(scenario, example_tags, example_row) when is_map(example_row) do
+  defp scenario_meta(context_history, scenario, example_tags, example_row)
+       when is_map(example_row) do
     scenario_details =
       if scenario.parsed_sentence do
         title =
@@ -40,6 +41,8 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
           end)
 
         %{
+          name: :scenario,
+          type: scenario.keyword,
           raw: scenario.name,
           title: title,
           location: Map.from_struct(scenario.location),
@@ -48,6 +51,8 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
         }
       else
         %{
+          name: :scenario,
+          type: scenario.keyword,
           raw: scenario.name,
           title: scenario.name,
           location: Map.from_struct(scenario.location),
@@ -56,8 +61,11 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
         }
       end
 
+    context_history = context_history |> Enum.reject(&(&1.name == :background))
+
     %{
-      history: [],
+      step_history: [],
+      context_history: [scenario_details | context_history],
       scenario: scenario_details,
       examples: %{tags: example_tags, row: example_row}
     }

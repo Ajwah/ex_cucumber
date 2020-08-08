@@ -1,12 +1,15 @@
 defmodule ExCucumber.CustomParameterType do
-  @moduledoc false
+  @moduledoc """
+
+  """
 
   @callback disambiguator :: Regex.t()
   @callback validator :: Regex.t()
-  @callback validator(any, any) :: any
-  @callback pre_transformer(any, any) :: any
+  @callback validator(any, any) :: {:ok, any} | {:error, any}
+  @callback pre_transformer(any, any) :: {:ok, any} | {:error, any}
 
   @optional_callbacks disambiguator: 0, validator: 0, validator: 2, pre_transformer: 2
+  @doc false
   def all_callbacks, do: @optional_callbacks |> List.first()
 
   defmodule Loader do

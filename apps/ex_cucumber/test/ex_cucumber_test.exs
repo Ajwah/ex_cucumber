@@ -87,7 +87,7 @@ defmodule ExCucumberTest do
     end
 
     @tag key: :best_practices,
-         value: %{disallow_gherkin_token_usage_mismatch?: false},
+         value: %{disallow_gherkin_token_usage_mismatch?: false, enforce_context?: false},
          test_module: OptionalsAlternatives.WithAllRelevantCombinations
     test "Handles optionals and alternatives", ctx do
       refute_raise(fn ->

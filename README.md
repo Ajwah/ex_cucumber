@@ -1,4 +1,7 @@
 # ExCucumber
+STATUS: BETA Release
+Currently I am using in my projects and cleaning up bugs as I go along.
+
 
 An `Elixir` implemenation of the `Cucumber` framework to facilitate
 [Behaviour-Driven Development(BDD)](https://cucumber.io/docs/bdd/)
@@ -71,7 +74,7 @@ end
 With the above context out of the way, this is how you would use this
 library:
 
-### Module-based Verbage
+### Module-based Verbiage
 In this style, you can leverage the following `macros`:
   * `Given._`
   * `And._`
@@ -114,7 +117,7 @@ defmodule MonsterFeature do
 end
 ```
 
-### Definition-based Verbage
+### Definition-based Verbiage
 In this style, you can leverage the following `macros`:
   * `defgiven`
   * `defand`
@@ -172,7 +175,8 @@ config :ex_cucumber,
   macro_style: :module, # [:def, :module]
   error_detail_level: :verbose, # [:brief, :verbose]
   best_practices: %{
-    disallow_gherkin_token_usage_mismatch?: false
+    disallow_gherkin_token_usage_mismatch?: false,
+    enforce_context?: true,
   }
 ```
 
@@ -206,7 +210,7 @@ config :ex_gherkin,
 Of important note is the need for `gherkin-languages.json` which you can
 download from the [official cucumber repository](https://github.com/cucumber/cucumber/blob/master/gherkin/gherkin-languages.json) and then you can use the `mix`
 `tasks` of [ex_gherkin](https://github.com/Ajwah/ex-gherkin) to generate
-the `.terms` file. In case you only use English, then
+the `.terms` file.
 
 
 ## Installation
@@ -219,7 +223,8 @@ end
 ```
 
 ## Docs
-The docs can be found at [https://hexdocs.pm/ex_cucumber](https://hexdocs.pm/ex_cucumber).
+Above represents very basic usage to get up and running. For more
+details, kindly consult the [docs](https://hexdocs.pm/ex_cucumber).
 
 ## Shoulders Of Giants
 For a long time I have been using [white-bread](https://github.com/meadsteve/white-bread) to satisfy my diet of `Cucumber`.

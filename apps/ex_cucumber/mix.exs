@@ -1,7 +1,7 @@
 defmodule ExCucumber.MixProject do
   use Mix.Project
 
-  @vsn "0.1.0"
+  @vsn "0.1.1"
   @github "https://github.com/Ajwah/ex_cucumber/tree/master/apps/ex_cucumber"
   @name "ExCucumber"
 
@@ -43,12 +43,12 @@ defmodule ExCucumber.MixProject do
 
   defp deps do
     [
-      {:cucumber_expressions, in_umbrella: true},
-      # {:cucumber_expressions, "~> 0.1.0"},
-      # {:ex_debugger, "0.1.3"},
-      {:ex_debugger, path: "/Users/kevinjohnson/projects/ex_debugger", override: true},
-      {:ex_gherkin, path: "/Users/kevinjohnson/projects/ex_gherkin", override: true}
-      # {:ex_gherkin, "0.1.2"}
+      # {:ex_debugger, path: "~/projects/ex_debugger", override: true},
+      # {:ex_gherkin, path: "~/projects/ex_gherkin", override: true},
+      # {:cucumber_expressions, in_umbrella: true},
+      {:ex_debugger, "0.1.3"},
+      {:ex_gherkin, "0.1.2"},
+      {:cucumber_expressions, "~> 0.1.1"},
     ]
   end
 

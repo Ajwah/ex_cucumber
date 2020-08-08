@@ -26,6 +26,7 @@ config :ex_cucumber,
   # [:brief, :verbose]
   error_detail_level: :verbose,
   best_practices: %{
-    disallow_gherkin_token_usage_mismatch?: false
+    disallow_gherkin_token_usage_mismatch?: false,
+    enforce_context?: false
   },
   placeholder: "This is to serve as a placeholder"

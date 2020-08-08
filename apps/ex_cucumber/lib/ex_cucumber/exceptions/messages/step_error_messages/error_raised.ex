@@ -8,12 +8,12 @@ defmodule ExCucumber.Exceptions.Messages.ErrorRaised do
   alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
 
   def render(%StepError{error_code: :error_raised} = e, _) do
-    {_, [line: line], _} = e.ctx.extra.raised_error.expr
+    # {_, [line: line], _} = e.ctx.extra.raised_error.expr
 
     """
     Feature File: #{CommonMessages.render(:feature_file, e.ctx)}
     #{inspect(e.ctx.module) |> to_string |> String.trim_leading("Elixir.")}: #{
-      CommonMessages.render(:module_file, e.ctx.module_file, line, 0)
+      CommonMessages.render(:module_file, e.ctx.module_file, e.ctx.extra.def_meta.line, 0)
     }
     Step: #{
       Utils.backtick(
@@ -22,6 +22,9 @@ defmodule ExCucumber.Exceptions.Messages.ErrorRaised do
     }
     Error:
     #{CommonMessages.render(:code_block, Exception.format(:error, e.ctx.extra.raised_error, []))}
+
+    State:
+    #{CommonMessages.render(:code_block, e.ctx.extra.state)}
     """
   end
 end

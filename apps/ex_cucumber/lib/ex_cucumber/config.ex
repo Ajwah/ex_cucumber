@@ -5,7 +5,8 @@ defmodule ExCucumber.Config do
   @macro_styles [:def, :module]
   @error_detail_levels [:brief, :verbose]
   @all_best_practices %{
-    disallow_gherkin_token_usage_mismatch?: [true, false]
+    disallow_gherkin_token_usage_mismatch?: [true, false],
+    enforce_context?: [true, false]
   }
 
   @full_env Application.get_all_env(:ex_cucumber)
@@ -24,7 +25,7 @@ defmodule ExCucumber.Config do
     [
       macro_style: :module,
       error_detail_level: :brief,
-      best_practices: %{disallow_gherkin_token_usage_mismatch?: true},
+      best_practices: %{disallow_gherkin_token_usage_mismatch?: true, enforce_context?: false},
       feature_dir: "#{project_root}/#{feature_dir}",
       project_root: project_root
     ]

@@ -26,7 +26,7 @@ defmodule CucumberExpressions.ParameterType.Base do
 
       def setup_transformer(input) do
         if transformer = Transformer.new(input[:transformer]) do
-          %{transformer.stage => transformer}
+          transformer
         else
           %{pre: nil, post: nil}
         end

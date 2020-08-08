@@ -164,7 +164,7 @@ defmodule ConfigTest do
     end
 
     @tag key: :best_practices,
-         value: %{disallow_gherkin_token_usage_mismatch?: true},
+         value: %{disallow_gherkin_token_usage_mismatch?: true, enforce_context?: false},
          test_module: CreateEmployeeFeatures.WithGherkinTokenMismatch
     test "disallow_gherkin_token_usage_mismatch?: true will raise an error when there is a mismatch",
          ctx do
@@ -174,7 +174,7 @@ defmodule ConfigTest do
     end
 
     @tag key: :best_practices,
-         value: %{disallow_gherkin_token_usage_mismatch?: false},
+         value: %{disallow_gherkin_token_usage_mismatch?: false, enforce_context?: false},
          test_module: CreateEmployeeFeatures.WithGherkinTokenMismatch
     test "disallow_gherkin_token_usage_mismatch?: false will not raise an error even though there is a mismatch",
          ctx do

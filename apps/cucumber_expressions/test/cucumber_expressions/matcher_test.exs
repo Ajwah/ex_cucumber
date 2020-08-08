@@ -884,5 +884,37 @@ defmodule CucumberExpressions.MatcherTest do
         Matcher.run("I detest this sentence", parsed_result, param_type)
       end)
     end
+
+    @tag test_data: []
+    test "Repetition by instance" do
+      full_sentence0 = "I {love} this sentence"
+      full_sentence1 = "I {hate} this sentence"
+      full_sentence2 = "I love this sentence"
+      full_sentence3 = "I hate this sentence"
+
+      parse_tree = %{}
+      parse_tree = Parser.run(full_sentence3, parse_tree)
+      parse_tree = Parser.run(full_sentence2, parse_tree)
+      parse_tree = Parser.run(full_sentence1, parse_tree)
+      parse_tree = Parser.run(full_sentence0, parse_tree)
+
+      parsed_result = CucumberExpressions.parse(full_sentence3, parse_tree)
+
+      param_type =
+        %{name: :love, type: :string, disambiguator: ~r/^(love|adore)/}
+        |> ParameterType.new()
+        |> ParameterType.add(%{
+          name: :hate,
+          type: :string,
+          disambiguator: ~r/^(hate|despise|detest)/
+        })
+
+      assert full_sentence1 ==
+               Matcher.run("I detest this sentence", parsed_result, param_type).end
+
+      assert full_sentence3 == Matcher.run("I hate this sentence", parsed_result, param_type).end
+      assert full_sentence0 == Matcher.run("I adore this sentence", parsed_result, param_type).end
+      assert full_sentence2 == Matcher.run("I love this sentence", parsed_result, param_type).end
+    end
   end
 end

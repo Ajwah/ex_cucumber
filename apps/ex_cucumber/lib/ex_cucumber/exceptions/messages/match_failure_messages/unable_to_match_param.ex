@@ -7,8 +7,6 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     Utils
   }
 
-  alias ExCucumber.Exceptions.Messages.Common, as: CommonMessages
-
   def render(%MatchFailure{error_code: :unable_to_match_param} = f, :brief) do
     """
     Unable To Match Param: #{f.extra.param_key} for the value: #{
@@ -16,7 +14,10 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     } while attemting to match the
     sentence: #{Utils.smart_quotes(f.ctx.sentence)} in `#{
       Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
-    }`
+    }
+    Error Message: #{f.extra.msg}`
+
+    Source: #{extract_failing_custom_param_details(f)}
     """
   end
 
@@ -28,15 +29,14 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     # Unable To Match Param: #{f.extra.param_key} for the value: #{
       Utils.smart_quotes(f.extra.value)
     }
+    Error Message: #{Utils.smart_quotes(f.extra.msg)}
+
+    Source: #{extract_failing_custom_param_details(f)}
+
     ## Summary
-    This exception is raised on account of the closest matching `cucumber expression` defined employs a `parameter` that
-    fails to match the value as encountered in the feature file.
+    #{extract_failing_custom_param_details(f)} has returned a tagged error tuple.
 
     ## Quick Fix
-    Either consult the details below to fix the `cucumber expression` responsible or either introduce a more specific
-    one to alleviate the ambiguity:
-    #{CommonMessages.render(:macro_usage, f.ctx, f.ctx.sentence)}
-
     ## Details
     * Module: `#{module_name}`
     * Module File: `#{f.ctx.module_file}`
@@ -48,16 +48,21 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     * Parameter Type: `#{f.extra.param_key}`
     * Failing Value: #{Utils.smart_quotes(f.extra.value)}
 
-    To help you narrow down the issue; here are the relevant details for the `Parameter Type` in question:
-    #{
-      CommonMessages.render(
-        :code_block,
-        "#{inspect(f.ctx.parameter_type.collection[f.extra.param_key], pretty: true)}"
-      )
-    }
-
     The following `cucumber expressions` were narrowed down that could be responsible for this exception:
     #{Utils.bullitize(endings, :as_smart_quoted_strings)}
     """
+  end
+
+  defp extract_failing_custom_param_details(f) do
+    custom_param = f.ctx.parameter_type.collection[f.extra.param_key]
+
+    f.extra.stage
+    |> case do
+      :pre_transform -> custom_param.transformer.pre.paradigm
+      :validator -> custom_param.validator.paradigm
+    end
+    |> case do
+      {module, param, arity} -> "`#{inspect(module)}.#{param}/#{arity}`"
+    end
   end
 end

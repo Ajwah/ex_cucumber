@@ -24,7 +24,12 @@ defmodule Helpers.Assertions do
       try do
         unquote(function).()
       rescue
-        error -> flunk("This is not supposed to raise yet it did: #{inspect(error)}")
+        error ->
+          flunk(
+            "This is not supposed to raise yet it did: #{
+              inspect(error, pretty: true, limit: :infinity)
+            }"
+          )
       end
     end
   end

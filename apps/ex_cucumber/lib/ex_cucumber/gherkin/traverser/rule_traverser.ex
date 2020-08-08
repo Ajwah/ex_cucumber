@@ -9,7 +9,7 @@ defmodule ExCucumber.Gherkin.Traverser.Rule do
   def run(%ExGherkin.AstNdjson.Rule{} = r, acc, parse_tree) do
     {background, children} = background(r.children)
 
-    acc = Ctx.extra(acc, rule_meta(r))
+    acc = Ctx.extra(acc, rule_meta(acc, r))
 
     children
     |> Enum.each(fn child ->
@@ -27,13 +27,26 @@ defmodule ExCucumber.Gherkin.Traverser.Rule do
   defp background([%{background: b = %Background{}} | tl]), do: {b, tl}
   defp background(ls), do: {nil, ls}
 
-  defp rule_meta(rule) do
+  defp rule_meta(acc, rule) do
+    rule_details = %{
+      name: :rule,
+      type: :rule,
+      title: rule.name,
+      location: Map.from_struct(rule.location),
+      keyword: rule.keyword
+    }
+
+    context_history =
+      acc.extra.context_history
+      |> case do
+        [] -> [rule_details]
+        [%{type: :rule} | tl] -> [rule_details | tl]
+        context_history -> [rule_details | context_history]
+      end
+
     %{
-      rule: %{
-        title: rule.name,
-        location: Map.from_struct(rule.location),
-        keyword: rule.keyword
-      }
+      context_history: context_history,
+      rule: rule_details
     }
   end
 end

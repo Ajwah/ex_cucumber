@@ -7,12 +7,13 @@ defmodule CucumberExpressions.ParameterType.Transformer do
   defstruct paradigm: {:atom, :atom, :integer},
             stage: @stages
 
-  def new(nil), do: nil
-  def new(module) when is_atom(module), do: new({module, :run, 2}, :pre)
-  def new({module, function}), do: new({module, function, 2}, :pre)
+  def new(a, stage \\ :pre)
+  def new(nil, _), do: nil
+  def new(module, stage) when is_atom(module), do: new({module, :run, 2}, stage)
+  def new({module, function}, stage), do: new({module, function, 2}, stage)
 
-  def new(_) do
-    raise_error("is invalid", :invalid)
+  def new(%{pre: pre, post: post}, _) do
+    %{pre: new(pre, :pre).pre, post: new(post, :post).post}
   end
 
   def new(mfa = {module, function, arity}, stage) do
@@ -20,7 +21,10 @@ defmodule CucumberExpressions.ParameterType.Transformer do
 
     if :erlang.function_exported(module, function, arity) do
       if stage in @stages do
-        struct(__MODULE__, %{paradigm: mfa, stage: stage})
+        %{
+          flip_stage(stage) => nil,
+          stage => struct(__MODULE__, %{paradigm: mfa, stage: stage})
+        }
       else
         raise_error(
           "has an invalid stage: #{stage}. Valid ones are: #{inspect(@stages)}",
@@ -31,6 +35,13 @@ defmodule CucumberExpressions.ParameterType.Transformer do
       raise_error("is non-existent", :non_existent)
     end
   end
+
+  def new(_, _) do
+    raise_error("is invalid", :invalid)
+  end
+
+  defp flip_stage(:pre), do: :post
+  defp flip_stage(:post), do: :pre
 
   def run(%__MODULE__{paradigm: {module, function, 2}}, str) do
     module
@@ -52,9 +63,19 @@ defmodule CucumberExpressions.ParameterType.Transformer do
 
   def run(nil, str), do: {:ok, str}
 
-  def raise_error(error_description, error_code) do
+  def raise_error(msg, error_code = :incompatible_format) do
     """
-    Transformer supplied for `ParameterType` #{error_description}.
+    Transformer supplied for `ParameterType` #{msg}.
+    Kindly return a tagged tuple:
+      * {:ok, result}
+      * {:error, error}
+    """
+    |> SyntaxError.raise(error_code)
+  end
+
+  def raise_error(msg, error_code) do
+    """
+    Transformer supplied for `ParameterType` #{msg}.
     Kindly specify a remote function:
     `{module, function, arity}` where arity is always `2`.
     """

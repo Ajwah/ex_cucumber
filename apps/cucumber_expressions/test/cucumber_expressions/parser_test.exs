@@ -229,8 +229,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumber" => :int,
-              " cucumbers" => :int,
-              p2p: %{}
+              " cucumbers" => :int
             },
             :int => %{
               " cucumber" => common_section,
@@ -250,8 +249,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumber" => :int,
-              " cucumbers" => :int,
-              p2p: %{}
+              " cucumbers" => :int
             },
             :int => %{
               " cucumber" => %{" for" => format_ending(" tonight", full_sentence1)},
@@ -276,8 +274,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " day" => :int,
-              " days" => :int,
-              p2p: %{}
+              " days" => :int
             },
             :int => %{" day" => common_subsection, " days" => common_subsection}
           }
@@ -289,8 +286,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumber" => :int,
-              " cucumbers" => :int,
-              p2p: %{}
+              " cucumbers" => :int
             },
             :int => %{
               " cucumber" => common_section,
@@ -314,8 +310,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumbers" => :int,
-              " potatoes" => :int,
-              p2p: %{}
+              " potatoes" => :int
             },
             :int => %{
               " cucumbers" => common_section,
@@ -335,8 +330,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumbers" => :int,
-              " potatoes" => :int,
-              p2p: %{}
+              " potatoes" => :int
             },
             :int => %{
               " cucumbers" => %{" for" => format_ending(" tonight", full_sentence1)},
@@ -361,8 +355,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " small cucumbers" => :int,
-              " delicious  potatoes" => :int,
-              p2p: %{}
+              " delicious  potatoes" => :int
             },
             :int => %{
               " small cucumbers" => common_section,
@@ -382,8 +375,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " small cucumbers" => :int,
-              " delicious  potatoes" => :int,
-              p2p: %{}
+              " delicious  potatoes" => :int
             },
             :int => %{
               " small cucumbers" => %{" for" => format_ending(" tonight", full_sentence1)},
@@ -411,8 +403,7 @@ defmodule CucumberExpressions.ParserTest do
               " potatoes" => :int,
               " tomatoes" => :int,
               " carrots" => :int,
-              " beans" => :int,
-              p2p: %{}
+              " beans" => :int
             },
             :int => %{
               " cucumbers" => common_section,
@@ -441,8 +432,7 @@ defmodule CucumberExpressions.ParserTest do
               " potatoes" => :int,
               " tomatoes" => :int,
               " carrots" => :int,
-              " beans" => :int,
-              p2p: %{}
+              " beans" => :int
             },
             :int => %{
               " cucumbers" => %{" for" => format_ending(" tonight", full_sentence1)},
@@ -473,8 +463,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " days" => :int,
-              " nights" => :int,
-              p2p: %{}
+              " nights" => :int
             },
             :int => %{" days" => common_subsection, " nights" => common_subsection}
           }
@@ -486,8 +475,7 @@ defmodule CucumberExpressions.ParserTest do
           :params => %{
             :next_key => %{
               " cucumbers" => :int,
-              " potatoes" => :int,
-              p2p: %{}
+              " potatoes" => :int
             },
             :int => %{
               " cucumbers" => common_section,
@@ -510,7 +498,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               int: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :int, p2p: %{}}
+              next_key: %{" sentence" => :int}
             }
           }
         }
@@ -527,7 +515,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               float: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :float, p2p: %{}}
+              next_key: %{" sentence" => :float}
             }
           }
         }
@@ -544,7 +532,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               word: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :word, p2p: %{}}
+              next_key: %{" sentence" => :word}
             }
           }
         }
@@ -561,7 +549,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               string: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :string, p2p: %{}}
+              next_key: %{" sentence" => :string}
             }
           }
         }
@@ -578,7 +566,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               any: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :any, p2p: %{}}
+              next_key: %{" sentence" => :any}
             }
           }
         }
@@ -597,7 +585,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               color: format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :color, p2p: %{}}
+              next_key: %{" sentence" => :color}
             }
           }
         }
@@ -614,7 +602,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               "int color": format_ending(" sentence", full_sentence),
-              next_key: %{" sentence" => :"int color", p2p: %{}}
+              next_key: %{" sentence" => :"int color"}
             }
           }
         }
@@ -632,10 +620,10 @@ defmodule CucumberExpressions.ParserTest do
         "This" => %{
           " is" => %{
             params: %{
-              next_key: %{p2p: %{color: :int}},
+              next_key: %{color: :int},
               int: %{
                 params: %{
-                  next_key: %{" sentence" => :color, p2p: %{}},
+                  next_key: %{" sentence" => :color},
                   color: format_ending(" sentence", full_sentence)
                 }
               }
@@ -652,16 +640,16 @@ defmodule CucumberExpressions.ParserTest do
 
       expected = %{
         params: %{
-          next_key: %{p2p: %{b: :a}},
+          next_key: %{b: :a},
           a: %{
             params: %{
-              next_key: %{p2p: %{c: :b}},
+              next_key: %{c: :b},
               b: %{
                 params: %{
-                  next_key: %{p2p: %{d: :c}},
+                  next_key: %{d: :c},
                   c: %{
                     params: %{
-                      next_key: %{p2p: %{e: :d}},
+                      next_key: %{e: :d},
                       d: %{
                         params: Map.put(format_ending(:e, full_sentence), :next_key, %{end: :e})
                       }
@@ -685,15 +673,26 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               next_key: %{
-                p2p: %{color: :int}
+                color: :int
               },
               int: %{
                 params: %{
                   next_key: %{
-                    " sentence" => :color,
-                    p2p: %{}
+                    " sentence" => :color
                   },
-                  color: format_ending(" sentence", full_sentence)
+                  color:
+                    format_ending(" sentence", full_sentence,
+                      incorporate: %{
+                        id: [
+                          "000000000000000",
+                          "000000000000000",
+                          "000000000000000",
+                          "000000000000000",
+                          "000000000000000",
+                          "000000000000000"
+                        ]
+                      }
+                    )
                 }
               }
             }
@@ -722,16 +721,14 @@ defmodule CucumberExpressions.ParserTest do
       expected = %{
         :params => %{
           next_key: %{
-            " this" => :string,
-            p2p: %{}
+            " this" => :string
           },
           string: %{" this" => format_ending(" sentence", full_sentence1)}
         },
         "This" => %{
           :params => %{
             :next_key => %{
-              " sentence" => :int,
-              p2p: %{}
+              " sentence" => :int
             },
             :int => %{
               " sentence" => %{
@@ -751,14 +748,13 @@ defmodule CucumberExpressions.ParserTest do
             :params => %{
               :next_key => %{
                 " sentence" => :int,
-                p2p: %{color: :int}
+                color: :int
               },
               :int =>
                 %{
                   :params => %{
                     :next_key => %{
-                      " sentence" => :color,
-                      p2p: %{}
+                      " sentence" => :color
                     },
                     :color => format_ending(" sentence", full_sentence3)
                   }
@@ -789,22 +785,41 @@ defmodule CucumberExpressions.ParserTest do
       expected = %{
         :params => %{
           next_key: %{
-            " this" => :string,
-            p2p: %{}
+            " this" => :string
           },
-          string: %{" this" => format_ending(" sentence", full_sentence1)}
+          string: %{
+            " this" =>
+              format_ending(" sentence", full_sentence1,
+                incorporate: %{
+                  id: [
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000",
+                    "000000000000000"
+                  ]
+                }
+              )
+          }
         },
         "This" => %{
           :params => %{
             :next_key => %{
-              " sentence" => :int,
-              p2p: %{}
+              " sentence" => :int
             },
             :int => %{
               " sentence" => %{
                 " is" => %{
                   :params =>
-                    Map.put(format_ending(:color, full_sentence5), :next_key, %{end: :color})
+                    Map.put(
+                      format_ending(:color, full_sentence5,
+                        incorporate: %{
+                          id: ["000000000000000", "000000000000000", "000000000000000"]
+                        }
+                      ),
+                      :next_key,
+                      %{end: :color}
+                    )
                 }
               }
             }
@@ -818,19 +833,30 @@ defmodule CucumberExpressions.ParserTest do
             :params => %{
               :next_key => %{
                 " sentence" => :int,
-                p2p: %{color: :int}
+                color: :int
               },
               :int =>
                 %{
                   :params => %{
                     :next_key => %{
-                      " sentence" => :color,
-                      p2p: %{}
+                      " sentence" => :color
                     },
                     :color => format_ending(" sentence", full_sentence3)
                   }
                 }
-                |> Map.merge(format_ending(" sentence", full_sentence2))
+                |> Map.merge(
+                  format_ending(" sentence", full_sentence2,
+                    incorporate: %{
+                      id: [
+                        "000000000000000",
+                        "000000000000000",
+                        "000000000000000",
+                        "000000000000000",
+                        "000000000000000"
+                      ]
+                    }
+                  )
+                )
             }
           }
         }
@@ -870,8 +896,7 @@ defmodule CucumberExpressions.ParserTest do
           " is" => %{
             params: %{
               next_key: %{
-                " sentence" => [:any, :string, :word, :float, :int],
-                p2p: %{}
+                " sentence" => [:any, :string, :word, :float, :int]
               },
               int: format_ending(" sentence", full_sentence1),
               float: format_ending(" sentence", full_sentence2),

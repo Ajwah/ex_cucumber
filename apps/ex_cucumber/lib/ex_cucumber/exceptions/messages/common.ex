@@ -3,11 +3,37 @@ defmodule ExCucumber.Exceptions.Messages.Common do
   alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
   alias ExCucumber.Gherkin.Traverser.Ctx
 
+  @opts [
+    limit: :infinity,
+    printable_limit: :infinity,
+    pretty: true,
+    width: 120,
+    syntax_colors: [
+      atom: :light_blue,
+      binary: :green,
+      boolean: :light_blue,
+      list: :blink_rapid,
+      map: :yellow,
+      number: :magenta,
+      regex: :blue,
+      string: :green,
+      tuple: :cyan
+    ]
+  ]
+
   # ARITY 2
   def render(:code_block, str) when is_binary(str) do
     """
     ```elixir
     #{str}
+    ```
+    """
+  end
+
+  def render(:code_block, any) do
+    """
+    ```elixir
+    #{inspect(any, @opts)}
     ```
     """
   end

@@ -11,7 +11,11 @@ defmodule ExCucumber.Gherkin.Traverser.Feature do
   def run(%ExGherkin.AstNdjson.Feature{} = f, acc, parse_tree) do
     {background, children} = background(f.children)
 
-    acc = Ctx.extra(acc, Map.merge(feature_meta(f), %{state: %{}, history: []}))
+    acc =
+      Ctx.extra(
+        acc,
+        Map.merge(feature_meta(f), %{state: %{}, step_history: [], context_history: []})
+      )
 
     children
     |> Enum.each(fn child ->

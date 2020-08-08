@@ -26,12 +26,19 @@ defmodule ExCucumber.Gherkin.Traverser.Background do
         :background
       end
 
+    background_details = %{
+      name: :background,
+      type: background_key,
+      title: background.name,
+      location: Map.from_struct(background.location),
+      keyword: background.keyword
+    }
+
+    context_history = acc.extra.context_history
+
     %{
-      background_key => %{
-        title: background.name,
-        location: Map.from_struct(background.location),
-        keyword: background.keyword
-      }
+      :context_history => [background_details | context_history],
+      background_key => background_details
     }
   end
 end

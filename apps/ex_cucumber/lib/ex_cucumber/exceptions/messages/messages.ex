@@ -1,11 +1,5 @@
 defmodule ExCucumber.Exceptions.Messages do
-  @moduledoc """
-  Template:
-    # Error Code
-    ## Summary
-    ## Quick Fix
-    ## Details
-  """
+  @moduledoc false
 
   use ExDebugger.Manual
 

@@ -60,6 +60,9 @@ defmodule CucumberExpressions.ParameterType do
       {failed_action, {:error, error}} ->
         {:error, failed_action, error}
 
+      {failed_action, {:error, error}, _} ->
+        {:error, failed_action, error}
+
       pipe_break ->
         pipe_break
     end
