@@ -206,6 +206,15 @@ defmodule CucumberExpressions.Matcher do
           next_key
           |> Map.delete(:p2p)
           |> Map.values()
+          |> case do
+            [e] ->
+              [e]
+
+            other ->
+              # IO.inspect({other, parse_tree, m}, label: :anomaly)
+              other |> Enum.uniq()
+          end
+          |> List.wrap()
 
         parameter_types
         |> ParameterType.run(param_key, Utils.strip_leading_space(current_word), false)
@@ -219,7 +228,7 @@ defmodule CucumberExpressions.Matcher do
               parse_tree
             )
 
-          {:ok, {_, {match, _}}} ->
+          {:ok, {_, match}} ->
             parse_tree.params[param_key]
             |> Map.put(:params, [{param_key, match} | params])
 

@@ -16,6 +16,7 @@ defmodule ExCucumber.Gherkin.Traverser.Ctx do
             module_file: "",
             token: nil,
             keyword: "",
+            runtime_filters: false,
             extra: %{}
 
   def new(
@@ -25,7 +26,9 @@ defmodule ExCucumber.Gherkin.Traverser.Ctx do
         %ParameterType{} = parameter_type \\ ParameterType.new(),
         location \\ :none,
         keyword \\ "",
-        token \\ :none
+        token \\ :none,
+        line \\ false,
+        tags \\ false
       ) do
     struct!(__MODULE__, %{
       feature_file: Utils.strip_cwd(feature_file, Config.project_root()),
@@ -34,9 +37,13 @@ defmodule ExCucumber.Gherkin.Traverser.Ctx do
       module_file: Utils.strip_cwd(module_file, Config.project_root()),
       location: location,
       keyword: keyword,
-      token: token
+      token: token,
+      runtime_filters: runtime_filters(line, tags)
     })
   end
+
+  def runtime_filters(false, false), do: false
+  def runtime_filters(line, tags), do: %{line: line, tags: tags}
 
   def location(%__MODULE__{} = m, location = %{column: _, line: _}), do: %{m | location: location}
 

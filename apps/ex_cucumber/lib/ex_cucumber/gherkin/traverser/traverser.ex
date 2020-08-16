@@ -7,10 +7,8 @@ defmodule ExCucumber.Gherkin.Traverser do
   alias __MODULE__.Scenario, as: ScenarioTraverser
   alias __MODULE__.Step, as: StepTraverser
 
-  alias CucumberExpressions.ParameterType
-
-  def ctx(feature_file, module, module_path, parameter_type \\ ParameterType.new()) do
-    Ctx.new(feature_file, module, module_path, parameter_type)
+  def ctx(feature_file, module, module_path, parameter_type, line \\ false, tags \\ false) do
+    Ctx.new(feature_file, module, module_path, parameter_type, :none, "", :none, line, tags)
   end
 
   def run(nil, acc, _), do: acc

@@ -14,11 +14,37 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
   use ExDebugger.Manual
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
+    if acc.runtime_filters && acc.runtime_filters.line do
+      acc.extra.context_history
+      |> Enum.find(false, fn %{location: %{line: line}} -> line == acc.runtime_filters.line end)
+      |> case do
+        false -> acc
+        _ -> do_step(s, acc, parse_tree)
+      end
+    else
+      do_step(s, acc, parse_tree)
+    end
+  end
+
+  defp do_step(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
     ctx =
       Ctx.update(acc, location: Map.from_struct(s.location), token: s.token, keyword: s.keyword)
 
     m = Matcher.run(s.text, parse_tree, acc.parameter_type, ctx)
-    params = Enum.reverse(m.params)
+
+    unless m[:id] do
+      raise """
+      Anomaly. `:id` should always be present.
+      #{inspect(m, label: :m, pretty: true, limit: :infinity)}
+      #{inspect(parse_tree, label: :parse_tree, pretty: true, limit: :infinity)}
+      #{inspect(acc.parameter_type, label: :parameter_type, pretty: true, limit: :infinity)}
+      #{inspect(ctx, label: :ctx, pretty: true, limit: :infinity)}
+      """
+    end
+
+    params =
+      m.params
+      |> Enum.reverse()
 
     {result, def_meta} =
       ctx
@@ -31,6 +57,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
         params: params,
         doc_string: s.docString,
         data_table: DataTable.to_map(s.dataTable, examples(acc.extra)),
+        raw_data_table: DataTable.to_lists(s.dataTable, examples(acc.extra)),
         step_history: acc.extra.step_history,
         context_history: acc.extra.context_history
       })

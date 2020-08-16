@@ -5,8 +5,9 @@ config :ex_debugger, :meta_debug,
   placeholder: false
 
 config :ex_debugger, :debug,
-  capture: :none,
+  capture: :stdout,
   all: false,
+  "Elixir.CucumberExpressions.ParameterType": false,
   placeholder: false
 
 config :ex_debugger, :manual_debug,

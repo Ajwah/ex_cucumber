@@ -4,7 +4,7 @@ defmodule ExCucumber do
   @external_resource "config/config.exs"
 
   alias CucumberExpressions.ParameterType
-  # use ExDebugger.Manual
+  use ExDebugger.Manual
 
   defmacro __using__(_) do
     quote do
@@ -66,8 +66,9 @@ defmodule ExCucumber do
             |> Enum.filter(fn fun ->
               {def_meta, context_nesting} = @meta[fun]
 
-              ctx.extra.context_history |> Enum.map(&{&1.name, &1.title || :no_title}) ==
-                context_nesting
+              ctx.extra.context_history
+              |> Enum.map(&{&1.name, &1.title || :no_title})
+              |> Kernel.==(context_nesting)
             end)
             |> case do
               [] ->
@@ -79,17 +80,36 @@ defmodule ExCucumber do
                 {e, @meta[e]}
 
               multiple_matches_ambiguity ->
-                raise "Multiple matches found: #{
-                        inspect(
-                          [
-                            multiple_matches_ambiguity: multiple_matches_ambiguity,
-                            extra: ctx.extra,
-                            meta: @meta
-                          ],
-                          pretty: true,
-                          limit: :infinity
-                        )
-                      }"
+                multiple_matches_ambiguity
+                |> Enum.filter(fn e ->
+                  elem(@meta[e], 0).macro_usage_gherkin_keyword ==
+                    actual_gherkin_token_as_parsed_from_feature_file
+                end)
+                |> case do
+                  [] ->
+                    raise "No matches found: #{
+                            inspect([ids: ctx.extra.fun, meta: @meta],
+                              pretty: true,
+                              limit: :infinity
+                            )
+                          }"
+
+                  [e] ->
+                    {e, @meta[e]}
+
+                  multiple_matches_ambiguity ->
+                    raise "Multiple matches found: #{
+                            inspect(
+                              [
+                                multiple_matches_ambiguity: multiple_matches_ambiguity,
+                                extra: ctx.extra,
+                                meta: @meta
+                              ],
+                              pretty: true,
+                              limit: :infinity
+                            )
+                          }"
+                end
             end
           else
             fun =
@@ -154,7 +174,9 @@ defmodule ExCucumber do
         __MODULE__,
         unquote(Macro.escape(env)).file,
         @cucumber_expressions_parse_tree,
-        custom_param_types
+        custom_param_types,
+        Application.get_env(:ex_cucumber, :line),
+        false
       )
     end
   end
@@ -163,7 +185,6 @@ defmodule ExCucumber do
   |> ExCucumber.Gherkin.Keywords.mappings()
   |> Map.fetch!(:regular)
   |> Enum.each(fn macro_name ->
-
     @doc false
     defmacro unquote(macro_name)(do: block) do
       ExCucumber.define_context_macro(
@@ -191,7 +212,6 @@ defmodule ExCucumber do
   |> ExCucumber.Gherkin.Keywords.mappings()
   |> Enum.each(fn {gherkin_keyword, macro_name} ->
     if ExCucumber.Gherkin.Keywords.macro_style?(:def) do
-
       @doc false
       defmacro unquote(macro_name)(cucumber_expression, arg, do: block) do
         ExCucumber.define_gherkin_keyword_macro(
@@ -214,7 +234,6 @@ defmodule ExCucumber do
         )
       end
     else
-
       @doc false
       defmacro unquote(macro_name)(cucumber_expression, _arg, _) do
         ExCucumber.define_gherkin_keyword_mismatch_macro(

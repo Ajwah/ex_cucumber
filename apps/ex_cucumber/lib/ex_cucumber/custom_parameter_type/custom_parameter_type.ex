@@ -4,11 +4,16 @@ defmodule ExCucumber.CustomParameterType do
   """
 
   @callback disambiguator :: Regex.t()
+  @callback pre_transformer(any, any) :: {:ok, any} | {:error, any}
   @callback validator :: Regex.t()
   @callback validator(any, any) :: {:ok, any} | {:error, any}
-  @callback pre_transformer(any, any) :: {:ok, any} | {:error, any}
+  @callback post_transformer(any, any) :: {:ok, any} | {:error, any}
 
-  @optional_callbacks disambiguator: 0, validator: 0, validator: 2, pre_transformer: 2
+  @optional_callbacks disambiguator: 0,
+                      pre_transformer: 2,
+                      validator: 0,
+                      validator: 2,
+                      post_transformer: 2
   @doc false
   def all_callbacks, do: @optional_callbacks |> List.first()
 
@@ -59,9 +64,21 @@ defmodule ExCucumber.CustomParameterType do
     defp build(ls, module, name, type) do
       ls
       |> Enum.reduce(%{name: name, type: type}, fn
-        {callback, 0}, a -> Map.put(a, callback, apply(module, callback, []))
-        {:validator, 2}, a -> Map.put(a, :validator, {module, :validator})
-        {:pre_transformer, 2}, a -> Map.put(a, :transformer, {module, :pre_transformer})
+        {callback, 0}, a ->
+          Map.put(a, callback, apply(module, callback, []))
+
+        {:validator, 2}, a ->
+          Map.put(a, :validator, {module, :validator})
+
+        {:pre_transformer, 2}, a ->
+          Map.update(a, :transformer, %{pre: {module, :pre_transformer}, post: nil}, fn e ->
+            %{pre: {module, :pre_transformer}, post: e.post}
+          end)
+
+        {:post_transformer, 2}, a ->
+          Map.update(a, :transformer, %{post: {module, :post_transformer}, pre: nil}, fn e ->
+            %{post: {module, :post_transformer}, pre: e.pre}
+          end)
       end)
     end
   end

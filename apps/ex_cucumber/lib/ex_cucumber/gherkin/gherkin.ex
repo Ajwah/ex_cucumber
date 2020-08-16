@@ -2,7 +2,6 @@ defmodule ExCucumber.Gherkin do
   @moduledoc false
   alias __MODULE__.Traverser
   alias ExCucumber.Exceptions.MatchFailure
-  alias CucumberExpressions.ParameterType
 
   use ExDebugger.Manual
 
@@ -12,17 +11,12 @@ defmodule ExCucumber.Gherkin do
     |> Enum.map(&execute/1)
   end
 
-  # def run(feature_path, module, module_path, parse_tree) do
-  # feature_path
-  # |> execute
-  # |> Traverser.run(Traverser.ctx(feature_path, module, module_path), parse_tree)
-  # end
-  def run(feature_path, module, module_path, parse_tree, parameter_type \\ ParameterType.new()) do
+  def run(feature_path, module, module_path, parse_tree, parameter_type, line, tags) do
     try do
       feature_path
       |> execute
       |> Traverser.run(
-        Traverser.ctx(feature_path, module, module_path, parameter_type),
+        Traverser.ctx(feature_path, module, module_path, parameter_type, line, tags),
         parse_tree
       )
     rescue

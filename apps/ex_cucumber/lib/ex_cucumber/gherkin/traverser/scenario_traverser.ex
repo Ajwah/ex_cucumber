@@ -11,7 +11,20 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
     |> Enum.each(fn {tags, rows} ->
       rows
       |> Enum.each(fn row ->
-        s.steps
+        steps =
+          if s.steps do
+            s.steps
+          else
+            IO.warn(
+              "Empty scenario encountered: #{acc.feature_file}:#{s.location.line}:#{
+                s.location.column
+              }"
+            )
+
+            []
+          end
+
+        steps
         |> Enum.reduce(Ctx.extra(acc, scenario_meta(acc.extra.context_history, s, tags, row)), fn
           %ExGherkin.AstNdjson.Step{} = step, a -> MainTraverser.run(step, a, parse_tree)
         end)

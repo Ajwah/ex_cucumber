@@ -31,13 +31,13 @@ defmodule Mix.Tasks.Cucumber do
     Code.compiler_options(ignore_module_conflict: false)
 
     Mix.Task.run("app.start")
-    _ = opts(opts)
+    {line_nr, files} = opts(opts)
 
     report =
-      "#{ExCucumber.Config.feature_dir()}/*.exs"
-      |> Path.wildcard()
+      files
       |> Enum.reduce(Report.new(), fn e, a = %Report{} ->
         try do
+          Application.put_env(:ex_cucumber, :line, line_nr)
           Code.compile_file(e)
           Report.record(a, :passed)
         rescue
@@ -55,8 +55,23 @@ defmodule Mix.Tasks.Cucumber do
     """)
   end
 
-  defp opts(opts) do
-    opts
-    # |> OptionParser.parse
+  defp opts([]), do: {false, "#{ExCucumber.Config.feature_dir()}/*.exs" |> Path.wildcard()}
+
+  defp opts([file]) do
+    file
+    |> String.split(":")
+    |> case do
+      [file, line_nr] ->
+        line_nr = line_nr |> Decimal.new() |> Decimal.to_integer()
+
+        IO.puts(
+          "Only running block corresponding to line: #{line_nr} inside corresponding feature file"
+        )
+
+        {line_nr, ["#{ExCucumber.Config.feature_dir()}/#{file}"]}
+
+      [file] ->
+        {false, ["#{ExCucumber.Config.feature_dir()}/#{file}"]}
+    end
   end
 end

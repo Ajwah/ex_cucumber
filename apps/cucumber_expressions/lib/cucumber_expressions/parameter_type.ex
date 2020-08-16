@@ -9,6 +9,8 @@ defmodule CucumberExpressions.ParameterType do
 
   defstruct collection: %{}
 
+  use ExDebugger
+
   def new do
     __MODULE__
     |> struct
@@ -47,7 +49,13 @@ defmodule CucumberExpressions.ParameterType do
          {_, {:ok, result = {_, _}}} <- disambiguate(parameter_type, str),
          {_, {:ok, result}, remainder_sentence} <-
            pre_transform(parameter_type, result, break_at_inoperative_disambiguator?),
-         {_, {:ok, result}} <- validate(parameter_type, result) do
+         {_, {:ok, result}} <- validate(parameter_type, result),
+         {_, {:ok, result}, _} <-
+           post_transform(
+             parameter_type,
+             {result, remainder_sentence},
+             break_at_inoperative_disambiguator?
+           ) do
       if break_at_inoperative_disambiguator? do
         {:ok, {parameter_key, {result, remainder_sentence}}}
       else
@@ -105,6 +113,24 @@ defmodule CucumberExpressions.ParameterType do
 
       {
         :pre_transform,
+        result,
+        remainder_sentence
+      }
+    end
+  end
+
+  defp post_transform(
+         parameter_type,
+         {match, remainder_sentence},
+         break_at_inoperative_disambiguator?
+       ) do
+    if break_at_inoperative_disambiguator? && remainder_sentence == :inoperative do
+      :inoperative_disambiguator
+    else
+      result = transform(parameter_type, match, :post)
+
+      {
+        :post_transform,
         result,
         remainder_sentence
       }

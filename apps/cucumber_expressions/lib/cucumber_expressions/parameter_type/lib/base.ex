@@ -19,17 +19,9 @@ defmodule CucumberExpressions.ParameterType.Base do
           type: input.type,
           disambiguator: disambiguator,
           validator: validator,
-          transformer: setup_transformer(input)
+          transformer: Transformer.new(input[:transformer])
           # opts: input[:opts],
         })
-      end
-
-      def setup_transformer(input) do
-        if transformer = Transformer.new(input[:transformer]) do
-          transformer
-        else
-          %{pre: nil, post: nil}
-        end
       end
     end
   end

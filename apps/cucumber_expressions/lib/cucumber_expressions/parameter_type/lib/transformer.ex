@@ -8,7 +8,7 @@ defmodule CucumberExpressions.ParameterType.Transformer do
             stage: @stages
 
   def new(a, stage \\ :pre)
-  def new(nil, _), do: nil
+  def new(nil, _), do: %{pre: nil, post: nil}
   def new(module, stage) when is_atom(module), do: new({module, :run, 2}, stage)
   def new({module, function}, stage), do: new({module, function, 2}, stage)
 

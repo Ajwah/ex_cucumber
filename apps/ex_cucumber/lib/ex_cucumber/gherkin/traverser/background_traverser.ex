@@ -12,7 +12,20 @@ defmodule ExCucumber.Gherkin.Traverser.Background do
   def run(%Background{} = b, acc, parse_tree) do
     acc = Ctx.extra(acc, background_meta(b, acc))
 
-    b.steps
+    steps =
+      if b.steps do
+        b.steps
+      else
+        IO.warn(
+          "Empty Background encountered: #{acc.feature_file}:#{b.location.line}:#{
+            b.location.column
+          }"
+        )
+
+        []
+      end
+
+    steps
     |> Enum.reduce(acc, fn
       %Step{} = step, a -> MainTraverser.run(step, a, parse_tree)
     end)
