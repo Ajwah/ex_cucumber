@@ -4,7 +4,7 @@ config :ex_debugger, :debug_options_file, "#{cwd}/debug_options.exs"
 
 gherkin_languages = "gherkin-languages"
 
-config :ex_gherkin,
+config :my_ex_gherkin,
   file: %{
     source: "#{cwd}/#{gherkin_languages}.json",
     resource: "#{cwd}/#{gherkin_languages}.few.terms"

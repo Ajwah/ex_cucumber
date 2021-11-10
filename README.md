@@ -1,7 +1,7 @@
 # ExCucumber
+
 STATUS: BETA Release
 Currently I am using in my projects and cleaning up bugs as I go along.
-
 
 An `Elixir` implemenation of the `Cucumber` framework to facilitate
 [Behaviour-Driven Development(BDD)](https://cucumber.io/docs/bdd/)
@@ -14,18 +14,22 @@ Feature files are parsed with [ExGherkin](https://github.com/Ajwah/ex-gherkin)
 This implementation uses `Cucumber Expressions` as opposed to `Regex`.
 For those who are not familiar with `Cucumber Expressions`, kindly
 consult the documentation on the official website:
-  * https://cucumber.io/blog/open-source/announcing-cucumber-expressions/
-  * https://cucumber.io/docs/cucumber/cucumber-expressions
+
+- https://cucumber.io/blog/open-source/announcing-cucumber-expressions/
+- https://cucumber.io/docs/cucumber/cucumber-expressions
 
 In addition to the above, the [git log](https://github.com/Ajwah/ex_cucumber/commits/master) of this repo aptly summarizes
 how these various tools work in tandem with each other.
 
 ## Basic Usage
+
 ### Context
+
 Leveraging the feature file below, and the example app provided below
 that, we can proceed to demonstrate basic usage.
 
 #### **Feature File**
+
 Assume you have the following feature file with the name `rule.feature`:
 
 ```gherkin
@@ -51,6 +55,7 @@ Feature: Gherkin 6 syntax
 ```
 
 #### **The Amazing Monster App**
+
 Assume that the following app represents the core of your trillion-dollar
 multinational:
 
@@ -75,14 +80,17 @@ With the above context out of the way, this is how you would use this
 library:
 
 ### Module-based Verbiage
+
 In this style, you can leverage the following `macros`:
-  * `Given._`
-  * `And._`
-  * `When._`
-  * `Then._`
-  * `But._`
+
+- `Given._`
+- `And._`
+- `When._`
+- `Then._`
+- `But._`
 
 Practically it would look like this:
+
 ```elixir
 defmodule MonsterFeature do
   use ExCucumber
@@ -118,14 +126,17 @@ end
 ```
 
 ### Definition-based Verbiage
+
 In this style, you can leverage the following `macros`:
-  * `defgiven`
-  * `defand`
-  * `defwhen`
-  * `defthen`
-  * `defbut`
+
+- `defgiven`
+- `defand`
+- `defwhen`
+- `defthen`
+- `defbut`
 
 Practically it would look like this:
+
 ```elixir
 defmodule MonsterFeature do
   use ExCucumber
@@ -160,11 +171,14 @@ end
 ```
 
 ### Verbage Styles Pros/Cons
+
 This has been discussed at length in [following commit message](https://github.com/Ajwah/ex_cucumber/commit/940579aa5f73539128773a062c8596ce15cb1838)
 Your feedback would be highly appreciated.
 
 ### Configuration
+
 The core configuration is
+
 ```elixir
 import Config
 config :ex_cucumber,
@@ -183,11 +197,12 @@ config :ex_cucumber,
 In addition to that `Cucumber` relies on a `Gherkin` parser which I have
 build as a [separate repository](https://github.com/Ajwah/ex-gherkin).
 Its configuration would be:
+
 ```
 import Config
 gherkin_languages = "gherkin-languages"
 
-config :ex_gherkin,
+config :my_ex_gherkin,
   file: %{
     # to be downloaded. instructions below
     source: "#{gherkin_languages}.json",
@@ -212,8 +227,8 @@ download from the [official cucumber repository](https://github.com/cucumber/cuc
 `tasks` of [ex_gherkin](https://github.com/Ajwah/ex-gherkin) to generate
 the `.terms` file.
 
-
 ## Installation
+
 ```elixir
 def deps do
   [
@@ -223,17 +238,20 @@ end
 ```
 
 ## Docs
+
 Above represents very basic usage to get up and running. For more
 details, kindly consult the [docs](https://hexdocs.pm/ex_cucumber).
 
 ## Shoulders Of Giants
+
 For a long time I have been using [white-bread](https://github.com/meadsteve/white-bread) to satisfy my diet of `Cucumber`.
 Regretfully, development [seems to have halted](https://github.com/meadsteve/white-bread/issues/88#issuecomment-547807754) whereas a variety of essential features are missing:
-  * No multi-language support
-  * No support for `But`
-  * No support for `Background`
-  * No support for `Scenario Outline`
-  * No support for `Rule`
+
+- No multi-language support
+- No support for `But`
+- No support for `Background`
+- No support for `Scenario Outline`
+- No support for `Rule`
 
 Regardless, it was one of the first packages that allowed developers to incorporate `BDD` into their development and I
 am very grateful for that. I hope for this package to be able to carry the banner forward and be a source of
@@ -241,9 +259,3 @@ developer happiness to others like @meadsteve's package was to me for a number o
 
 In addition to that, [cabbage](https://github.com/cabbage-ex/cabbage) is also worthy of consideration. Regretfully, it
 too suffers from what I enumerated above.
-
-
-
-
-
-

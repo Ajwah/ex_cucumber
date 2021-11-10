@@ -1,7 +1,7 @@
 defmodule CucumberExpressions.MixProject do
   use Mix.Project
 
-  @vsn "0.1.1"
+  @vsn "0.1.3"
   @github "https://github.com/Ajwah/ex_cucumber/tree/master/apps/cucumber_expressions"
   @name "CucumberExpressions"
 
@@ -42,9 +42,8 @@ defmodule CucumberExpressions.MixProject do
 
   defp deps() do
     [
-      {:ex_debugger, git: "https://github.com/Ajwah/ex_debugger.git", override: true},
       # {:ex_debugger, path: "~/projects/ex_debugger", override: true},
-      # {:ex_debugger, "0.1.3"},
+      {:ex_debugger, "0.1.5"},
       {:puid, "~> 1.0"}
     ]
   end
