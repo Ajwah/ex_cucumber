@@ -392,7 +392,7 @@ defmodule CucumberExpressions.MatcherTest do
                    ctx.template_sentence
                    |> String.myers_difference(ctx.full_sentence)
 
-          assert [eq: "I had a meeting on ", del: del, ins: ins, eq: " in New York"] =
+          assert [eq: "I had a meeting on ", del: _del, ins: ins, eq: " in New York"] =
                    ctx.template_sentence
                    |> String.myers_difference(ctx.cucumber_expression)
 

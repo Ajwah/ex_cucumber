@@ -14,7 +14,8 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
   use ExDebugger.Manual
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
-    if acc.runtime_filters && acc.runtime_filters.line do
+    [hd| _] = acc.extra.context_history
+    if acc.runtime_filters && acc.runtime_filters.line && hd.name != :background do
       acc.extra.context_history
       |> Enum.find(false, fn %{location: %{line: line}} -> line == acc.runtime_filters.line end)
       |> case do
@@ -46,6 +47,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
       m.params
       |> Enum.reverse()
 
+    # IO.inspect(acc, limit: :infinity, pretty: true, label: :acc)
     {result, def_meta} =
       ctx
       |> Ctx.extra(%{
@@ -59,7 +61,12 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
         data_table: DataTable.to_map(s.dataTable, examples(acc.extra)),
         raw_data_table: DataTable.to_lists(s.dataTable, examples(acc.extra)),
         step_history: acc.extra.step_history,
-        context_history: acc.extra.context_history
+        context_history: acc.extra.context_history,
+        feature_file: %{
+          text: s.text,
+          location: ctx.location,
+          keyword: ctx.keyword
+        },
       })
       |> dd(:run)
 

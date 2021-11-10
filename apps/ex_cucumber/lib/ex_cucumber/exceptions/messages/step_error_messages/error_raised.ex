@@ -24,7 +24,7 @@ defmodule ExCucumber.Exceptions.Messages.ErrorRaised do
     #{CommonMessages.render(:code_block, Exception.format(:error, e.ctx.extra.raised_error, []))}
 
     State:
-    #{CommonMessages.render(:code_block, e.ctx.extra.state)}
+    {CommonMessages.render(:code_block, e.ctx.extra.state)}
     """
   end
 end

@@ -24,7 +24,7 @@ defmodule CucumberExpressions.MixProject do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.9",
+      elixir: "~> 1.13.0-rc.0",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -33,7 +33,7 @@ defmodule CucumberExpressions.MixProject do
 
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :crypto]
     ]
   end
 
@@ -42,7 +42,8 @@ defmodule CucumberExpressions.MixProject do
 
   defp deps() do
     [
-      {:ex_debugger, path: "~/projects/ex_debugger", override: true},
+      {:ex_debugger, git: "https://github.com/Ajwah/ex_debugger.git", override: true},
+      # {:ex_debugger, path: "~/projects/ex_debugger", override: true},
       # {:ex_debugger, "0.1.3"},
       {:puid, "~> 1.0"}
     ]

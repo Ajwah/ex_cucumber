@@ -7,7 +7,7 @@ defmodule ExCucumber do
   use ExDebugger.Manual
 
   defmacro __using__(_) do
-    quote do
+    quote location: :keep do
       import ExUnit.Assertions
 
       require ExCucumber.Gherkin.Keywords.Given
@@ -50,13 +50,13 @@ defmodule ExCucumber do
   end
 
   defmacro __before_compile__(_) do
-    quote do
+    quote location: :keep do
       @cucumber_expressions_parse_tree ExCucumber.CucumberExpression.parse(@cucumber_expressions)
 
       alias ExCucumber.Gherkin.Traverser.Ctx
       alias ExCucumber.Gherkin.Keywords, as: GherkinKeywords
 
-      def execute_mfa(%Ctx{} = ctx, arg) do
+      def execute_mfa(%Ctx{} = ctx, args) do
         actual_gherkin_token_as_parsed_from_feature_file = ctx.token
 
         {fun, {def_meta, _}} =
@@ -125,7 +125,7 @@ defmodule ExCucumber do
 
         arg =
           if def_meta.has_arg? do
-            [arg]
+            [args]
           else
             []
           end
@@ -133,7 +133,7 @@ defmodule ExCucumber do
         # dd({arg, @meta, ctx}, :execute_mfa)
 
         if ExCucumber.Config.best_practices().disallow_gherkin_token_usage_mismatch? &&
-             gherkin_token_mismatch? do
+            gherkin_token_mismatch? do
           ExCucumber.Exceptions.UsageError.raise(
             Ctx.extra(ctx, %{
               def_line: def_meta.line,
@@ -157,7 +157,33 @@ defmodule ExCucumber do
               )
 
             e ->
-              reraise e, __STACKTRACE__
+              # This is easier but not sure it applies to all stack traces
+              # __STACKTRACE__
+              # |> Enum.chunk_by(fn
+              #   {_, :execute_mfa, 2, _} -> :pivot
+              #   e -> :default
+              # end)
+
+              # This one is more complicated but should work always
+              {left, right} = __STACKTRACE__
+                |> Enum.reduce({:append_to_left, {[], []}}, fn
+                  e = {_, :execute_mfa, 2, _}, {_, {left, right}} -> {:append_to_right, {left, [right | [e]]}}
+                  e , {state, {left, right}} -> {left, right} = state
+                    |> case do
+                      :append_to_left -> {[left | [e]], right}
+                      :append_to_right -> {left, [right | [e]]}
+                    end
+                    {state, {left, right}}
+                end)
+                |> elem(1)
+
+              f = args.feature_file
+              middle = [
+                {def_meta.cucumber_expression.meta.module, def_meta.cucumber_expression.meta.gherkin_keyword, [def_meta.cucumber_expression.formulation], [file: def_meta.cucumber_expression.meta.file, line: def_meta.cucumber_expression.meta.line_nr]},
+                {:feature_file, :line, [f.text], [file: ExCucumber.Config.feature_path(@feature), line: f.location.line]}
+              ]
+              s = List.flatten([left, middle, right])
+              reraise e, s
           end
         end
       end
@@ -165,9 +191,8 @@ defmodule ExCucumber do
   end
 
   defmacro __after_compile__(env, _) do
-    quote do
+    quote location: :keep do
       custom_param_types = ExCucumber.CustomParameterType.Loader.run(@custom_param_types)
-
       @feature
       |> ExCucumber.Config.feature_path()
       |> ExCucumber.Gherkin.run(
@@ -180,6 +205,7 @@ defmodule ExCucumber do
       )
     end
   end
+
 
   :context_macros
   |> ExCucumber.Gherkin.Keywords.mappings()

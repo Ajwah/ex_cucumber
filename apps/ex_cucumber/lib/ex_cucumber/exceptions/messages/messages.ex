@@ -75,8 +75,8 @@ defmodule ExCucumber.Exceptions.Messages do
 
     if error_detail_level == :verbose do
       {heading, body} = render(f, detail_level: :verbose)
-      IO.ANSI.Docs.print_heading(heading, @default_options)
-      IO.ANSI.Docs.print(body, @default_options)
+      IO.ANSI.Docs.print_headings([heading], @default_options)
+      IO.ANSI.Docs.print_headings([body], @default_options)
 
       if exit?, do: exit(:shutdown)
     else
