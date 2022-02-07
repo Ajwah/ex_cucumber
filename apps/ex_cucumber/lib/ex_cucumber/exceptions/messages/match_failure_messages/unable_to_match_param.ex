@@ -9,12 +9,8 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
 
   def render(%MatchFailure{error_code: :unable_to_match_param} = f, :brief) do
     """
-    Unable To Match Param: #{f.extra.param_key} for the value: #{
-      Utils.smart_quotes(f.extra.value)
-    } while attemting to match the
-    sentence: #{Utils.smart_quotes(f.ctx.sentence)} in `#{
-      Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
-    }
+    Unable To Match Param: #{f.extra.param_key} for the value: #{Utils.smart_quotes(f.extra.value)} while attemting to match the
+    sentence: #{Utils.smart_quotes(f.ctx.sentence)} in `#{Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)}
     Error Message: #{f.extra.msg}`
 
     Source: #{extract_failing_custom_param_details(f)}
@@ -26,9 +22,7 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     module_name = f.ctx.__struct__.module_name(f.ctx)
 
     """
-    # Unable To Match Param: #{f.extra.param_key} for the value: #{
-      Utils.smart_quotes(f.extra.value)
-    }
+    # Unable To Match Param: #{f.extra.param_key} for the value: #{Utils.smart_quotes(f.extra.value)}
     Error Message: #{Utils.smart_quotes(f.extra.msg)}
 
     Source: #{extract_failing_custom_param_details(f)}
@@ -40,9 +34,7 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatchParam do
     ## Details
     * Module: `#{module_name}`
     * Module File: `#{f.ctx.module_file}`
-    * Feature File: `#{
-      Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
-    }`
+    * Feature File: `#{Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)}`
     * Gherkin Keyword: #{f.ctx.keyword}
     * Sentence: #{Utils.smart_quotes(f.ctx.sentence)}
     * Parameter Type: `#{f.extra.param_key}`

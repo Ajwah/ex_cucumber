@@ -20,13 +20,14 @@ defmodule Mix.Tasks.Cucumber do
     UsageError
   ]
 
+  import ExCucumber.Utils.ProjectCompiler
   @shortdoc "Run cucumber framework"
   @impl Mix.Task
   def run(opts) do
     Code.compiler_options(ignore_module_conflict: true)
-    IEx.Helpers.r(ExCucumber.Config)
-    IEx.Helpers.r(ExCucumber)
-    IEx.Helpers.r(ExCucumber.Gherkin.Keywords)
+    recompile(ExCucumber.Config)
+    recompile(ExCucumber)
+    recompile(ExCucumber.Gherkin.Keywords)
 
     Code.compiler_options(ignore_module_conflict: false)
 

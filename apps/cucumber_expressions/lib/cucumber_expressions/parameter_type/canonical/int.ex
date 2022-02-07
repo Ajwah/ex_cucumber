@@ -13,9 +13,7 @@ defmodule CucumberExpressions.ParameterType.Canonical.Int do
         ok
 
       :error ->
-        raise "This is impossible. Disambiguator should have singled out only digits. Instead: #{
-                inspect(str)
-              }"
+        raise "This is impossible. Disambiguator should have singled out only digits. Instead: #{inspect(str)}"
     end
   end
 

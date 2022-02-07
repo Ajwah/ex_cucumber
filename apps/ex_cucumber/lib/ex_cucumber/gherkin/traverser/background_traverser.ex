@@ -17,9 +17,7 @@ defmodule ExCucumber.Gherkin.Traverser.Background do
         b.steps
       else
         IO.warn(
-          "Empty Background encountered: #{acc.feature_file}:#{b.location.line}:#{
-            b.location.column
-          }"
+          "Empty Background encountered: #{acc.feature_file}:#{b.location.line}:#{b.location.column}"
         )
 
         []

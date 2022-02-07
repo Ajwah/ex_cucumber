@@ -40,6 +40,9 @@ defmodule ExCucumber.Gherkin.Keywords do
       but: "not me"
     ]
   }
+
+  def file_path, do: "#{__DIR__}/gherkin_keywords.ex"
+
   def macro_style?(macro_style), do: Config.macro_style() == macro_style
 
   def section do

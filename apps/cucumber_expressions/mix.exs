@@ -1,7 +1,7 @@
 defmodule CucumberExpressions.MixProject do
   use Mix.Project
 
-  @vsn "0.1.3"
+  @vsn "0.1.4"
   @github "https://github.com/Ajwah/ex_cucumber/tree/master/apps/cucumber_expressions"
   @name "CucumberExpressions"
 

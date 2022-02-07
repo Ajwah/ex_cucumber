@@ -19,6 +19,7 @@ defmodule ExCucumber.Config do
   alias ExCucumber.Exceptions.ConfigurationError
   use ExDebugger.Manual
 
+  def file_path, do: "#{__DIR__}/config.ex"
   def default_env, do: example_env(project_root: File.cwd!(), feature_dir: "features")
 
   def example_env(project_root: project_root, feature_dir: feature_dir) do

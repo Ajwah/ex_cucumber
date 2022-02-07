@@ -33,16 +33,10 @@ defmodule ExCucumber.Exceptions.Messages.GherkinTokenMismatch do
       2. Either use the correct `macro` instead, e.g.: `#{GherkinKeywords.macro_name(e.ctx)}`
 
     ### Option 1
-    #{
-      CommonMessages.render(:config_option, :best_practices, %{
-        disallow_gherkin_token_usage_mismatch?: false
-      })
-    }
+    #{CommonMessages.render(:config_option, :best_practices, %{disallow_gherkin_token_usage_mismatch?: false})}
 
     ### Option 2
-    Inside the `module`: #{Utils.backtick(module_name)} at: #{
-      CommonMessages.render(:module_file, e.ctx.module_file, e.ctx.extra.def_line, 3)
-    },
+    Inside the `module`: #{Utils.backtick(module_name)} at: #{CommonMessages.render(:module_file, e.ctx.module_file, e.ctx.extra.def_line, 3)},
     adjust to the following:
 
     #{CommonMessages.render(:macro_usage, e.ctx, e.ctx.extra.cucumber_expression)}

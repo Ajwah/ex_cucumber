@@ -74,9 +74,7 @@ defmodule CucumberExpressions.Parser do
     else
       {type_constraint, violator, false} ->
         ValidationError.raise(
-          "[#{__MODULE__}.new] Expected type: #{inspect(type_constraint)}. Violator: #{
-            inspect(violator)
-          }",
+          "[#{__MODULE__}.new] Expected type: #{inspect(type_constraint)}. Violator: #{inspect(violator)}",
           :type_mismatch,
           violator
         )

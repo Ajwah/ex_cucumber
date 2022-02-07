@@ -14,7 +14,7 @@ defmodule ConfigTest do
 
   require Helpers.Assertions
   import Helpers.Assertions
-  import Helpers.ProjectCompiler
+  import ExCucumber.Utils.ProjectCompiler
 
   @non_existent_option_to_bypass_test_setup :non_existent_option_to_bypass_test_setup
   @invalid_value "This is an absolutely invalid value"
@@ -75,14 +75,14 @@ defmodule ConfigTest do
     test "When set to: `module` then user can employ module-style-macros when formulating `Cucumber Expressions`",
          ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag key: :macro_style, value: :def, test_module: CreateEmployeeFeatures.WithModuleMacroStyle
     test "When set to: `def` will raise when user employs module-style-macros instead", ctx do
       assert_specific_raise(ConfigurationError, :macro_style_mismatch, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -90,14 +90,14 @@ defmodule ConfigTest do
     test "When set to: `def` then user can employ def-style-macros when formulating `Cucumber Expressions`",
          ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag key: :macro_style, value: :module, test_module: CreateEmployeeFeatures.WithDefMacroStyle
     test "When set to: `module` will raise when user employs def-style-macros instead", ctx do
       assert_specific_raise(ConfigurationError, :macro_style_mismatch, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -105,7 +105,7 @@ defmodule ConfigTest do
     test "invalid option raises", _ctx do
       assert_specific_raise(ConfigurationError, :incorrect_macro_style, fn ->
         Application.put_env(:ex_cucumber, :macro_style, @invalid_value)
-        IEx.Helpers.r(Config)
+        recompile(Config)
       end)
     end
   end
@@ -128,7 +128,7 @@ defmodule ConfigTest do
          test_module: CreateEmployeeFeatures.WithModuleMacroStyle
     test ":verbose is a valid option", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -137,7 +137,7 @@ defmodule ConfigTest do
          test_module: CreateEmployeeFeatures.WithModuleMacroStyle
     test ":brief is a valid option", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -145,7 +145,7 @@ defmodule ConfigTest do
     test "invalid option raises", _ctx do
       assert_specific_raise(ConfigurationError, :incorrect_error_level_detail, fn ->
         Application.put_env(:ex_cucumber, :error_detail_level, @invalid_value)
-        IEx.Helpers.r(Config)
+        recompile(Config)
       end)
     end
   end
@@ -169,7 +169,7 @@ defmodule ConfigTest do
     test "disallow_gherkin_token_usage_mismatch?: true will raise an error when there is a mismatch",
          ctx do
       assert_specific_raise(UsageError, :gherkin_token_mismatch, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -179,7 +179,7 @@ defmodule ConfigTest do
     test "disallow_gherkin_token_usage_mismatch?: false will not raise an error even though there is a mismatch",
          ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
@@ -187,7 +187,7 @@ defmodule ConfigTest do
     test "invalid option raises", _ctx do
       assert_specific_raise(ConfigurationError, :best_practices_incomplete, fn ->
         Application.put_env(:ex_cucumber, :best_practices, @invalid_value)
-        IEx.Helpers.r(Config)
+        recompile(Config)
       end)
     end
   end
@@ -216,7 +216,7 @@ defmodule ConfigTest do
     test "Option: `feature_dir` invalid", _ctx do
       assert_specific_raise(ConfigurationError, :invalid_feature_dir, fn ->
         Application.put_env(:ex_cucumber, :feature_dir, @invalid_value)
-        IEx.Helpers.r(Config)
+        recompile(Config)
       end)
     end
 
@@ -224,21 +224,21 @@ defmodule ConfigTest do
     test "Option: `project_root` invalid", _ctx do
       assert_specific_raise(ConfigurationError, :invalid_project_root, fn ->
         Application.put_env(:ex_cucumber, :project_root, @invalid_value)
-        IEx.Helpers.r(Config)
+        recompile(Config)
       end)
     end
 
     @tag test_module: CreateEmployeeFeatures.WithFeatureModuleAttribute.Missing
     test "Module Attribute: `@feature` missing", ctx do
       assert_specific_raise(ConfigurationError, :feature_attribute_missing, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: CreateEmployeeFeatures.WithFeatureModuleAttribute.PointingToMissingFile
     test "Module Attribute: `@feature` pointing to missing file", ctx do
       assert_specific_raise(ConfigurationError, :feature_file_not_found, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
   end
