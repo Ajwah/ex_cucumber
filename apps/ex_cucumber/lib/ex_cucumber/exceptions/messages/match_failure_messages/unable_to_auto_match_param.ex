@@ -27,9 +27,7 @@ defmodule ExCucumber.Exceptions.Messages.UnableToAutoMatchParam do
     the ambiguity.
 
     Known cases of conflict are:
-      * Succeeding params without specifying a disambiguator for the preceding one, e.g.: #{
-      Utils.smart_quotes("I {action} {food_drink} every day")
-    }
+      * Succeeding params without specifying a disambiguator for the preceding one, e.g.: #{Utils.smart_quotes("I {action} {food_drink} every day")}
 
     In the above example, if no `disambiguator` has been defined for the `Custom Parameter Type` corresponding to the param `action`
     then auto matching will fail.
@@ -44,9 +42,7 @@ defmodule ExCucumber.Exceptions.Messages.UnableToAutoMatchParam do
 
     ## Details
     * Error: Unable To Match
-    * Feature File: `#{
-      Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
-    }`
+    * Feature File: `#{Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)}`
     * Module: `#{module_name}`
     * Cause: Missing `disambiguator` to match: #{Utils.smart_quotes(f.ctx.sentence)}
 

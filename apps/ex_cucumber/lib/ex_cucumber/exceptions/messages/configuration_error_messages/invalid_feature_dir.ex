@@ -21,9 +21,7 @@ defmodule ExCucumber.Exceptions.Messages.InvalidFeatureDir do
 
     ## Details
     The recommended location is `/features` under root of your `app`; not under `test` as this is a collaboration
-    framework; not a testing framework. See: #{
-      ExCucumber.DocumentationResources.link(:worlds_most_misunderstood_collaboration_tool)
-    }
+    framework; not a testing framework. See: #{ExCucumber.DocumentationResources.link(:worlds_most_misunderstood_collaboration_tool)}
     """
   end
 end

@@ -6,6 +6,8 @@ defmodule ExCucumber do
   alias CucumberExpressions.ParameterType
   use ExDebugger.Manual
 
+  def file_path, do: "#{__DIR__}/ex_cucumber.ex"
+
   defmacro __using__(_) do
     quote location: :keep do
       import ExUnit.Assertions
@@ -72,9 +74,7 @@ defmodule ExCucumber do
             end)
             |> case do
               [] ->
-                raise "No matches found: #{
-                        inspect([ids: ctx.extra.fun, meta: @meta], pretty: true, limit: :infinity)
-                      }"
+                raise "No matches found: #{inspect([ids: ctx.extra.fun, meta: @meta], pretty: true, limit: :infinity)}"
 
               [e] ->
                 {e, @meta[e]}
@@ -87,28 +87,17 @@ defmodule ExCucumber do
                 end)
                 |> case do
                   [] ->
-                    raise "No matches found: #{
-                            inspect([ids: ctx.extra.fun, meta: @meta],
-                              pretty: true,
-                              limit: :infinity
-                            )
-                          }"
+                    raise "No matches found: #{inspect([ids: ctx.extra.fun, meta: @meta],
+                    pretty: true,
+                    limit: :infinity)}"
 
                   [e] ->
                     {e, @meta[e]}
 
                   multiple_matches_ambiguity ->
-                    raise "Multiple matches found: #{
-                            inspect(
-                              [
-                                multiple_matches_ambiguity: multiple_matches_ambiguity,
-                                extra: ctx.extra,
-                                meta: @meta
-                              ],
-                              pretty: true,
-                              limit: :infinity
-                            )
-                          }"
+                    raise "Multiple matches found: #{inspect([multiple_matches_ambiguity: multiple_matches_ambiguity, extra: ctx.extra, meta: @meta],
+                    pretty: true,
+                    limit: :infinity)}"
                 end
             end
           else
@@ -133,7 +122,7 @@ defmodule ExCucumber do
         # dd({arg, @meta, ctx}, :execute_mfa)
 
         if ExCucumber.Config.best_practices().disallow_gherkin_token_usage_mismatch? &&
-            gherkin_token_mismatch? do
+             gherkin_token_mismatch? do
           ExCucumber.Exceptions.UsageError.raise(
             Ctx.extra(ctx, %{
               def_line: def_meta.line,
@@ -165,23 +154,38 @@ defmodule ExCucumber do
               # end)
 
               # This one is more complicated but should work always
-              {left, right} = __STACKTRACE__
+              {left, right} =
+                __STACKTRACE__
                 |> Enum.reduce({:append_to_left, {[], []}}, fn
-                  e = {_, :execute_mfa, 2, _}, {_, {left, right}} -> {:append_to_right, {left, [right | [e]]}}
-                  e , {state, {left, right}} -> {left, right} = state
-                    |> case do
-                      :append_to_left -> {[left | [e]], right}
-                      :append_to_right -> {left, [right | [e]]}
-                    end
+                  e = {_, :execute_mfa, 2, _}, {_, {left, right}} ->
+                    {:append_to_right, {left, [right | [e]]}}
+
+                  e, {state, {left, right}} ->
+                    {left, right} =
+                      state
+                      |> case do
+                        :append_to_left -> {[left | [e]], right}
+                        :append_to_right -> {left, [right | [e]]}
+                      end
+
                     {state, {left, right}}
                 end)
                 |> elem(1)
 
               f = args.feature_file
+
               middle = [
-                {def_meta.cucumber_expression.meta.module, def_meta.cucumber_expression.meta.gherkin_keyword, [def_meta.cucumber_expression.formulation], [file: def_meta.cucumber_expression.meta.file, line: def_meta.cucumber_expression.meta.line_nr]},
-                {:feature_file, :line, [f.text], [file: ExCucumber.Config.feature_path(@feature), line: f.location.line]}
+                {def_meta.cucumber_expression.meta.module,
+                 def_meta.cucumber_expression.meta.gherkin_keyword,
+                 [def_meta.cucumber_expression.formulation],
+                 [
+                   file: def_meta.cucumber_expression.meta.file,
+                   line: def_meta.cucumber_expression.meta.line_nr
+                 ]},
+                {:feature_file, :line, [f.text],
+                 [file: ExCucumber.Config.feature_path(@feature), line: f.location.line]}
               ]
+
               s = List.flatten([left, middle, right])
               reraise e, s
           end
@@ -193,6 +197,7 @@ defmodule ExCucumber do
   defmacro __after_compile__(env, _) do
     quote location: :keep do
       custom_param_types = ExCucumber.CustomParameterType.Loader.run(@custom_param_types)
+
       @feature
       |> ExCucumber.Config.feature_path()
       |> ExCucumber.Gherkin.run(
@@ -205,7 +210,6 @@ defmodule ExCucumber do
       )
     end
   end
-
 
   :context_macros
   |> ExCucumber.Gherkin.Keywords.mappings()

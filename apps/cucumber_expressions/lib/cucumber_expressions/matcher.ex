@@ -303,14 +303,10 @@ defmodule CucumberExpressions.Matcher do
       error_code = :current_key_not_present ->
         if is_list(current_key) do
           """
-          Unable to determine which param to apply: #{inspect(current_key)} in order to resolve: '#{
-            current_word
-          }'
+          Unable to determine which param to apply: #{inspect(current_key)} in order to resolve: '#{current_word}'
           In the presence of multiple params colliding for a match, it is required that one ParameterType exists with a
           disambiguator that is able to match.
-          Kindly manually check the supplied ParameterTypes on your part: #{
-            inspect(parameter_types, pretty: true)
-          } and determine
+          Kindly manually check the supplied ParameterTypes on your part: #{inspect(parameter_types, pretty: true)} and determine
           which ParameterType is missing for any of: #{inspect(current_key)} with a disambiguator to distinguish accordingly
           """
           |> Failure.raise(:multiple_params_collision_ambiguity, m, parse_tree)

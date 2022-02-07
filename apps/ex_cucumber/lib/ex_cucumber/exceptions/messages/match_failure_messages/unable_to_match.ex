@@ -34,9 +34,7 @@ defmodule ExCucumber.Exceptions.Messages.UnableToMatch do
 
     ## Details
     * Error: Unable To Match
-    * Feature File: `#{
-      Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)
-    }`
+    * Feature File: `#{Exception.format_file_line(f.ctx.feature_file, f.ctx.location.line, f.ctx.location.column)}`
     * Module: `#{module_name}`
     * Cause: Missing `cucumber expression` for: #{Utils.smart_quotes(f.ctx.sentence)}
     """

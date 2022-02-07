@@ -16,9 +16,7 @@ defmodule ExCucumber.Gherkin.Traverser.Scenario do
             s.steps
           else
             IO.warn(
-              "Empty scenario encountered: #{acc.feature_file}:#{s.location.line}:#{
-                s.location.column
-              }"
+              "Empty scenario encountered: #{acc.feature_file}:#{s.location.line}:#{s.location.column}"
             )
 
             []

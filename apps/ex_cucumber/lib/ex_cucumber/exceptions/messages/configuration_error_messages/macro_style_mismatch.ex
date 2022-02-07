@@ -15,9 +15,7 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
   def render(%ConfigurationError{error_code: :macro_style_mismatch} = e, :brief) do
     """
     Macro Style Mismatch
-    Use the `macro`: `#{GherkinKeywords.macro_name(e.ctx)}` instead at: #{
-      CommonMessages.render(:module_file, e.ctx)
-    }
+    Use the `macro`: `#{GherkinKeywords.macro_name(e.ctx)}` instead at: #{CommonMessages.render(:module_file, e.ctx)}
     """
   end
 
@@ -39,18 +37,12 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
 
     ### Option 1
 
-    #{
-      CommonMessages.render(
-        :config_option,
-        :macro_style,
-        "#{Utils.atomize(counterpart, :no_backticks)} # [:def, :module]"
-      )
-    }
+    #{CommonMessages.render(:config_option,
+    :macro_style,
+    "#{Utils.atomize(counterpart, :no_backticks)} # [:def, :module]")}
 
     ### Option 2
-    Inside the `module`: #{Utils.backtick(module_name)} at: #{
-      CommonMessages.render(:module_file, e.ctx)
-    },
+    Inside the `module`: #{Utils.backtick(module_name)} at: #{CommonMessages.render(:module_file, e.ctx)},
     copy-paste the following:
 
     #{CommonMessages.render(:macro_usage, e.ctx, e.ctx.extra.cucumber_expression)}
@@ -62,26 +54,18 @@ defmodule ExCucumber.Exceptions.Messages.MacroStyleMismatch do
     #{example_phrases(:def_based_gwt_macros)}
 
     Then you need to set the following config option:
-    #{
-      CommonMessages.render(
-        :config_option,
-        :macro_style,
-        "#{Utils.atomize(:def, :no_backticks)} # [:def, :module]"
-      )
-    }
+    #{CommonMessages.render(:config_option,
+    :macro_style,
+    "#{Utils.atomize(:def, :no_backticks)} # [:def, :module]")}
 
     In the case that you like to employ the following macro styles:
 
     #{example_phrases(:module_based_gwt_macros)}
 
     Then you need to set the following config option:
-    #{
-      CommonMessages.render(
-        :config_option,
-        :macro_style,
-        "#{Utils.atomize(:module, :no_backticks)} # [:def, :module]"
-      )
-    }
+    #{CommonMessages.render(:config_option,
+    :macro_style,
+    "#{Utils.atomize(:module, :no_backticks)} # [:def, :module]")}
     """
   end
 

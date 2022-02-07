@@ -3,7 +3,7 @@ defmodule ExCucumberTest do
 
   require Helpers.Assertions
   import Helpers.Assertions
-  import Helpers.ProjectCompiler
+  import ExCucumber.Utils.ProjectCompiler
 
   alias ExCucumber.Exceptions.MatchFailure
 
@@ -63,14 +63,14 @@ defmodule ExCucumberTest do
     @tag test_module: CreateEmployeeFeatures.WithStepOmitted, error_code: :unable_to_match
     test "Omitting a step will raise a MatchFailure", ctx do
       assert_specific_raise(MatchFailure, ctx.error_code, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: CreateEmployeeFeatures.WithInvalidParam, error_code: :unable_to_match_param
     test "Employing an invalid parameter will raise a MatchFailure", ctx do
       assert_specific_raise(MatchFailure, ctx.error_code, fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
   end
@@ -91,42 +91,42 @@ defmodule ExCucumberTest do
          test_module: OptionalsAlternatives.WithAllRelevantCombinations
     test "Handles optionals and alternatives", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: Params.Canonical
     test "Handles Canonical Params", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: Params.Custom
     test "Handles Custom Params", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: CreateEmployeeFeatures.WithDataTable
     test "Handles Scenario Outline", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: BookStoreFeature.DemonstrateBackgroundUsage
     test "Handles Background", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
 
     @tag test_module: RuleFeature.DemonstrateRuleUsage
     test "Handles Rule", ctx do
       refute_raise(fn ->
-        recompile(ctx)
+        recompile(ctx: ctx)
       end)
     end
   end

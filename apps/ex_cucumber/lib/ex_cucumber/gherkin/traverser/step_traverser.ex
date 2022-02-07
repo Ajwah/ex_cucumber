@@ -14,7 +14,8 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
   use ExDebugger.Manual
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
-    [hd| _] = acc.extra.context_history
+    [hd | _] = acc.extra.context_history
+
     if acc.runtime_filters && acc.runtime_filters.line && hd.name != :background do
       acc.extra.context_history
       |> Enum.find(false, fn %{location: %{line: line}} -> line == acc.runtime_filters.line end)
@@ -66,7 +67,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
           text: s.text,
           location: ctx.location,
           keyword: ctx.keyword
-        },
+        }
       })
       |> dd(:run)
 

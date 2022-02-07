@@ -22,18 +22,14 @@ defmodule CucumberExpressions.ParameterType.Canonical.Float do
         parse(str)
 
       _ ->
-        raise "Multiple dots are impossible. Disambiguator should have singled out a simple float. Instead: #{
-                inspect(str)
-              }"
+        raise "Multiple dots are impossible. Disambiguator should have singled out a simple float. Instead: #{inspect(str)}"
     end
     |> case do
       {:ok, _} = ok ->
         ok
 
       :error ->
-        raise "This is impossible. Disambiguator should have singled out a simple float. Instead: #{
-                inspect(str)
-              }"
+        raise "This is impossible. Disambiguator should have singled out a simple float. Instead: #{inspect(str)}"
     end
   end
 

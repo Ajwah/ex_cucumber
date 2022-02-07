@@ -12,14 +12,8 @@ defmodule ExCucumber.Exceptions.Messages.ErrorRaised do
 
     """
     Feature File: #{CommonMessages.render(:feature_file, e.ctx)}
-    #{inspect(e.ctx.module) |> to_string |> String.trim_leading("Elixir.")}: #{
-      CommonMessages.render(:module_file, e.ctx.module_file, e.ctx.extra.def_meta.line, 0)
-    }
-    Step: #{
-      Utils.backtick(
-        CommonMessages.render(:macro_usage_heading, e.ctx, e.ctx.extra.cucumber_expression)
-      )
-    }
+    #{inspect(e.ctx.module) |> to_string |> String.trim_leading("Elixir.")}: #{CommonMessages.render(:module_file, e.ctx.module_file, e.ctx.extra.def_meta.line, 0)}
+    Step: #{Utils.backtick(CommonMessages.render(:macro_usage_heading, e.ctx, e.ctx.extra.cucumber_expression))}
     Error:
     #{CommonMessages.render(:code_block, Exception.format(:error, e.ctx.extra.raised_error, []))}
 
