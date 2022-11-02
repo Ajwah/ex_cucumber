@@ -11,7 +11,7 @@ defmodule Support.MatcherHelper do
   defmodule T do
     @fixed_id Utils.id(:fixed)
     import ExUnit.Assertions
-    use ExDebugger.Manual
+    # use ExDebugger.Manual
 
     def assert_match(
           full_sentence,
@@ -22,26 +22,23 @@ defmodule Support.MatcherHelper do
         ) do
       t1 = :os.system_time(:millisecond)
 
-      parse_tree =
-        Enum.reduce(tl, %{}, &Parser.run/2)
-        |> dd(:parse_tree)
+      parse_tree = Enum.reduce(tl, %{}, &Parser.run/2)
+      # |> dd(:parse_tree)
 
       t2 = :os.system_time(:millisecond)
 
-      parsed_result =
-        CucumberExpressions.parse(hd, parse_tree, id)
-        |> dd(:parsed_result)
+      parsed_result = CucumberExpressions.parse(hd, parse_tree, id)
+      # |> dd(:parsed_result)
 
       t3 = :os.system_time(:millisecond)
 
-      result =
-        Matcher.run(full_sentence, parsed_result, p)
-        |> dd(:result)
+      result = Matcher.run(full_sentence, parsed_result, p)
+      # |> dd(:result)
 
       t4 = :os.system_time(:millisecond)
 
-      _ =
-        [parse_tree: t2 - t1, cucumber_expression_parse: t3 - t2, matcher: t4 - t3] |> dd(:timing)
+      _ = [parse_tree: t2 - t1, cucumber_expression_parse: t3 - t2, matcher: t4 - t3]
+      # |> dd(:timing)
 
       if scenario do
         assert result.end in cucumber_expressions,

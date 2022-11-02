@@ -1,6 +1,6 @@
 defmodule CucumberExpressions.Parser.ParseTree do
   @moduledoc false
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   def subtree(parse_tree, key) do
     parse_tree

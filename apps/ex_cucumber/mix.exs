@@ -24,7 +24,7 @@ defmodule ExCucumber.MixProject do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.13.0-rc.0",
+      elixir: "~> 1.14.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -44,7 +44,7 @@ defmodule ExCucumber.MixProject do
   defp deps do
     [
       {:decimal, "~> 1.0"},
-      {:ex_debugger, "0.1.5"},
+      # {:ex_debugger, "0.1.5"},
       # {:ex_debugger, path: "~/projects/ex_debugger", override: true},
       # {:my_ex_gherkin, path: "~/projects/ex_gherkin", override: true},
       # {:cucumber_expressions, in_umbrella: true},

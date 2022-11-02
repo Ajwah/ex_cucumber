@@ -9,7 +9,7 @@ defmodule CucumberExpressions.ParameterType do
 
   defstruct collection: %{}
 
-  use ExDebugger
+  # use ExDebugger
 
   def new do
     __MODULE__

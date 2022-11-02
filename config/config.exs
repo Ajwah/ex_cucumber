@@ -1,6 +1,6 @@
 import Config
 cwd = File.cwd!() |> String.split("apps") |> List.first()
-config :ex_debugger, :debug_options_file, "#{cwd}/debug_options.exs"
+# config :ex_debugger, :debug_options_file, "#{cwd}/debug_options.exs"
 
 gherkin_languages = "gherkin-languages"
 

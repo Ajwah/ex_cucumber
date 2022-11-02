@@ -15,12 +15,12 @@ defmodule CucumberExpressions.Matcher do
 
   import __MODULE__.Data
 
-  use ExDebugger
-  use ExDebugger.Manual
+  # use ExDebugger
+  # use ExDebugger.Manual
 
   def run(sentence, %Parser{} = p, %ParameterType{} = pt, ctx \\ %{}) when is_binary(sentence) do
     setting_this_to_true_handles_preceding_spaces = true
-    dd(p, :check_parser_content)
+    # dd(p, :check_parser_content)
 
     [
       current_word: "",
@@ -73,7 +73,7 @@ defmodule CucumberExpressions.Matcher do
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        dd({:matcher0, :key_not_present}, :matcher)
+        # dd({:matcher0, :key_not_present}, :matcher)
         Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
       {:process_until_next_match, next_keys} ->
@@ -195,7 +195,7 @@ defmodule CucumberExpressions.Matcher do
     |> ParseTree.subtree(current_word)
     |> case do
       :key_not_present ->
-        dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
+        # dd({:matcher50, :subtree, :end_of_sentence, :key_not_present}, :matcher)
 
         Failure.raise(ctx, :unable_to_match, m, parse_tree)
 
@@ -263,7 +263,7 @@ defmodule CucumberExpressions.Matcher do
     |> Submatcher.find(rest, parameter_types)
     |> case do
       :key_not_present ->
-        dd({:matcher25, :submatcher, :key_not_present}, :matcher)
+        # dd({:matcher25, :submatcher, :key_not_present}, :matcher)
 
         Failure.raise(
           ctx,

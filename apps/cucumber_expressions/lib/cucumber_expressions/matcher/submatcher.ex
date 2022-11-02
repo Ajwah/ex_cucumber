@@ -4,8 +4,8 @@ defmodule CucumberExpressions.Matcher.Submatcher do
   alias CucumberExpressions.Parser.ParseTree
 
   import Record
-  use ExDebugger
-  use ExDebugger.Manual
+  # use ExDebugger
+  # use ExDebugger.Manual
 
   defrecord :submatcher,
     current_word: "",
@@ -100,7 +100,8 @@ defmodule CucumberExpressions.Matcher.Submatcher do
            {{:matching_key, :end}, {:previous_key, key},
             {:subsentence_so_far, previous_subsentence <> current_word},
             {:remainder_sentence, ""}}}
-          |> dd(:submatcher)
+
+          # |> dd(:submatcher)
         else
           :key_not_present
         end

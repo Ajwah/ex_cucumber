@@ -36,8 +36,8 @@ defmodule CucumberExpressions.Parser do
   alias __MODULE__.SyntaxError
   alias __MODULE__.ValidationError
 
-  use ExDebugger
-  use ExDebugger.Manual
+  # use ExDebugger
+  # use ExDebugger.Manual
 
   def new(
         remaining_sentence,
