@@ -1,7 +1,7 @@
 %{
   "commendable_comments": {:hex, :commendable_comments, "0.1.0", "88051b8e72dbf79c625bc5c7037ffe11b3a135ab4f1e889ae146fb5d673c8508", [:mix], [], "hexpm", "8072c69f6d4f2f6bfc8146de429907b0ffadf4a2ed7fd9611db518e77be6a6ff"},
   "crypto_rand": {:hex, :crypto_rand, "1.0.3", "8773799e3ed124ce8a81feb935fffbeb3b6621ea2b841c2bbaff4fd09752fd66", [:mix], [], "hexpm", "701a76fea71119fe60aea02f50191bf82a60cb687046931e4d6de6acb8da1685"},
-  "cucumber_expressions": {:hex, :cucumber_expressions, "0.1.4", "0d47e5a84042bbcaae83e1365750464e80736f0e42f94dff50f89c8daf7e2ca1", [:mix], [{:ex_debugger, "0.1.5", [hex: :ex_debugger, repo: "hexpm", optional: false]}, {:puid, "~> 1.0", [hex: :puid, repo: "hexpm", optional: false]}], "hexpm", "1a069697778a11d4e4ae3995d6604012efc6db163f7ceced9a92701276c01e40"},
+  "cucumber_expressions": {:hex, :cucumber_expressions, "0.1.5", "ed11a8fb7107535f6740fbd558a7fcbb9dd7906cbca31cf4c7a6e0de7ef8c6b3", [:mix], [{:puid, "~> 1.0", [hex: :puid, repo: "hexpm", optional: false]}], "hexpm", "de493ecdb6993e937efb84d4af91a86c43a15336a10590eb6aa73086a2f2503b"},
   "decimal": {:hex, :decimal, "1.9.0", "83e8daf59631d632b171faabafb4a9f4242c514b0a06ba3df493951c08f64d07", [:mix], [], "hexpm", "b1f2343568eed6928f3e751cf2dffde95bfaa19dd95d09e8a9ea92ccfd6f7d85"},
   "jason": {:hex, :jason, "1.4.0", "e855647bc964a44e2f67df589ccf49105ae039d4179db7f6271dfd3843dc27e6", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "79a3791085b2a0f743ca04cec0f7be26443738779d09302e01318f97bdb82121"},
   "jiffy": {:hex, :jiffy, "1.1.1", "aca10f47aa91697bf24ab9582c74e00e8e95474c7ef9f76d4f1a338d0f5de21b", [:rebar3], [], "hexpm", "62e1f0581c3c19c33a725c781dfa88410d8bff1bbafc3885a2552286b4785c4c"},

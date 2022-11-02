@@ -1,7 +1,7 @@
 defmodule CucumberExpressions.MixProject do
   use Mix.Project
 
-  @vsn "0.1.4"
+  @vsn "0.1.5"
   @github "https://github.com/Ajwah/ex_cucumber/tree/master/apps/cucumber_expressions"
   @name "CucumberExpressions"
 
@@ -24,7 +24,7 @@ defmodule CucumberExpressions.MixProject do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.13.0-rc.0",
+      elixir: "~> 1.14.1",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
