@@ -6,7 +6,7 @@ defmodule CucumberExpressions.ParameterType.Disambiguator do
     Utils
   }
 
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   defstruct paradigm: [%Regex{}]
 
