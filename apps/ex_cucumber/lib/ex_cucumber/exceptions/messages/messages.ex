@@ -1,7 +1,7 @@
 defmodule ExCucumber.Exceptions.Messages do
   @moduledoc false
 
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   alias __MODULE__.{
     BestPracticesIncomplete,
@@ -71,7 +71,7 @@ defmodule ExCucumber.Exceptions.Messages do
 
   def render(f, exit?) when is_atom(exit?) do
     error_detail_level = ExCucumber.Config.error_detail_level()
-    dd(:render)
+    # dd(:render)
 
     if error_detail_level == :verbose do
       {heading, body} = render(f, detail_level: :verbose)

@@ -3,7 +3,7 @@ defmodule ExCucumber.Gherkin do
   alias __MODULE__.Traverser
   alias ExCucumber.Exceptions.MatchFailure
 
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   def run_all(path) do
     "#{path}/*.feature"
@@ -29,8 +29,9 @@ defmodule ExCucumber.Gherkin do
     |> ExGherkin.prepare()
     |> ExGherkin.run()
     |> elem(1)
-    |> dd(:raw_feature)
+    # |> dd(:raw_feature)
     |> ExGherkin.AstNdjson.run()
-    |> dd(:run)
+
+    # |> dd(:run)
   end
 end

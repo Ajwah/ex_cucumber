@@ -17,7 +17,7 @@ defmodule ExCucumber.Config do
   @best_practices Application.get_env(:ex_cucumber, :best_practices, %{})
 
   alias ExCucumber.Exceptions.ConfigurationError
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   def file_path, do: "#{__DIR__}/config.ex"
   def default_env, do: example_env(project_root: File.cwd!(), feature_dir: "features")
@@ -51,7 +51,7 @@ defmodule ExCucumber.Config do
 
   def feature_path(feature_file_name) when is_binary(feature_file_name) do
     full_feature_path = "#{feature_dir()}/#{feature_file_name}"
-    dd(:feature_path)
+    # dd(:feature_path)
 
     if File.exists?(full_feature_path) do
       full_feature_path
