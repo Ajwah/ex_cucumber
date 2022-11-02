@@ -4,7 +4,7 @@ defmodule ExCucumber do
   @external_resource "config/config.exs"
 
   alias CucumberExpressions.ParameterType
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   def file_path, do: "#{__DIR__}/ex_cucumber.ex"
 

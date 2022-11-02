@@ -11,7 +11,7 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
   }
 
   alias ExGherkin.AstNdjson.Step.DataTable
-  use ExDebugger.Manual
+  # use ExDebugger.Manual
 
   def run(%ExGherkin.AstNdjson.Step{} = s, acc, parse_tree) do
     [hd | _] = acc.extra.context_history
@@ -69,7 +69,8 @@ defmodule ExCucumber.Gherkin.Traverser.Step do
           keyword: ctx.keyword
         }
       })
-      |> dd(:run)
+
+    # |> dd(:run)
 
     event = %{
       feature_file: %{
