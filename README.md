@@ -223,7 +223,7 @@ config :my_ex_gherkin,
 ```
 
 Of important note is the need for `gherkin-languages.json` which you can
-download from the [official cucumber repository](https://github.com/cucumber/cucumber/blob/master/gherkin/gherkin-languages.json) and then you can use the `mix`
+download from the [official cucumber repository](https://github.com/cucumber/gherkin/blob/main/gherkin-languages.json) and then you can use the `mix`
 `tasks` of [ex_gherkin](https://github.com/Ajwah/ex-gherkin) to generate
 the `.terms` file.
 
